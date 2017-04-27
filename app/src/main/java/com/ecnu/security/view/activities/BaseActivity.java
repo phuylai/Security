@@ -25,7 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity{
     }
 
     protected abstract void initActionBar();
-    protected abstract void setListenters();
+    protected abstract void setListeners();
     private void initFragment(){}
 
     @Override
@@ -35,7 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity{
         if(layoutId > 0){
             setContentView(layoutId);
             findViews();
-            setListenters();
+            setListeners();
         }
     }
 

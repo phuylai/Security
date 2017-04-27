@@ -77,17 +77,16 @@ public class MainActivity extends BaseActivity {
     protected void initActionBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //TODO: if the indicator function works, try to remove the below code
         actionBar = getSupportActionBar();
-        if(currentFragment != mainPageFragment) {
-            actionBar.setDisplayUseLogoEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
     }
 
     @Override
-    protected void setListenters() {
+    protected void setListeners() {
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
@@ -164,6 +163,7 @@ public class MainActivity extends BaseActivity {
         }
         lasttopFragment.changeTitle();
         onFragmentResume(lasttopFragment);
+        lasttopFragment.setBackIndicator();
         topFragments.remove(lasttopFragment);
     }
 
@@ -266,6 +266,13 @@ public class MainActivity extends BaseActivity {
         if(toolbar != null){
             toolbar.setTitle(title);
         }
+    }
+
+    public void setBackIndicator(boolean enable){
+        actionBar.setDisplayUseLogoEnabled(enable);
+        actionBar.setDisplayHomeAsUpEnabled(enable);
+        actionBar.setHomeButtonEnabled(enable);
+        actionBar.setDisplayShowHomeEnabled(enable);
     }
 
 }

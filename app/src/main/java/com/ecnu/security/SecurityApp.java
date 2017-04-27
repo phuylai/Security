@@ -10,6 +10,8 @@ import com.ecnu.security.Util.ResourceUtil;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import io.fog.helper.MiCO;
+
 /**
  * Created by Phuylai on 2017/4/25.
  */

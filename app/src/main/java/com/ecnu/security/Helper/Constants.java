@@ -8,6 +8,12 @@ public class Constants {
     //first run flag
     public static final String FIRST_RUN_TAG = "first_run_tag";
 
+    public static String _APPID = "7e05d7d6-f987-11e6-9d95-00163e103941";
+
+    public static String _APPID(){
+        return _APPID;
+    }
+
     //debug true or false
     public static final boolean DEBUG_ENABLE = true;
 
@@ -28,6 +34,10 @@ public class Constants {
     //user
     public final static String PARAM_USERNAME = "username";
     public final static String PARAM_PASSWORD = "password";
+    public final static String PARAM_CLIENTID = "clientid";
+    public final static String PARAM_TOKEN = "token";
+    public final static String PARAM_FOG_HOST = "foghost";
+    public final static String PARAM_APP_ID = "fogappid";
 
     //Language
     public static final String PARAM_LANGUAGE = "language";

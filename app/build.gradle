@@ -36,4 +36,5 @@ dependencies {
     compile 'com.android.support:design:25.0.0'
     compile 'com.android.support:support-vector-drawable:25.0.0'
     testCompile 'junit:junit:4.12'
+    compile 'io.fogcloud.sdk:fog2_sdk:0.1.1'
 }

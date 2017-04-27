@@ -30,6 +30,7 @@ public abstract  class BaseFragment extends Fragment {
     protected Context context;
     protected Resources resources;
     protected Toolbar toolbar;
+    protected boolean backIndicator = false;
 
     protected Map<String,SelectedItemCallBackListener> listenerMap = new HashMap<>();
     private interface SelectedItemCallBackListener{
@@ -43,6 +44,10 @@ public abstract  class BaseFragment extends Fragment {
         resources = context.getResources();
         activity = (MainActivity) getActivity();
         toolbar = activity.toolbar;
+    }
+
+    public void setBackIndicator(){
+        activity.setBackIndicator(backIndicator);
     }
 
     @Nullable
@@ -65,6 +70,7 @@ public abstract  class BaseFragment extends Fragment {
             return;
         if(activity instanceof MainActivity){
             this.activity = (MainActivity) activity;
+            setBackIndicator();
             changeTitle();
             this.activity.onFragmentResume(this);
         }
@@ -127,6 +133,10 @@ public abstract  class BaseFragment extends Fragment {
     }
 
     public boolean onBackPressed(){
+        if(backIndicator){
+            activity.goToMainPageFragment();
+            return true;
+        }
         return false;
     }
 }

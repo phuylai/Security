@@ -16,6 +16,12 @@ public class MainPageFragment extends BaseFragment {
 
     private View mView;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        backIndicator = false;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,6 +36,12 @@ public class MainPageFragment extends BaseFragment {
         }
         findViews(mView);
         return mView;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        activity.finish();
+        return true;
     }
 
     @Override

@@ -57,6 +57,46 @@ public class MyPreference {
         editor.apply();
     }
 
+    public void setFogHost(String fogHost) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_FOG_HOST, fogHost);
+        editor.apply();
+    }
+
+    public String getFogHost(){
+        return settings.getString(Constants.PARAM_FOG_HOST,"");
+    }
+
+    public void setAppID(String appID) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_APP_ID, appID);
+        editor.apply();
+    }
+
+    public String getAppID(){
+        return settings.getString(Constants.PARAM_APP_ID,"");
+    }
+
+    public void setToken(String token){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_TOKEN,token);
+        editor.apply();
+    }
+
+    public String getToken(){
+        return settings.getString(Constants.PARAM_TOKEN,"");
+    }
+
+    public void setClientID(String clientID){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_CLIENTID,clientID);
+        editor.apply();
+    }
+
+    public String getClientID(){
+        return settings.getString(Constants.PARAM_CLIENTID,"");
+    }
+
     public String getPassword() {
         return settings.getString(Constants.PARAM_PASSWORD, "");
     }

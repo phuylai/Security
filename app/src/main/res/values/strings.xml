@@ -3,4 +3,26 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Mode</string>
     <string name="title_notifications">Setting</string>
+    <!--login-->
+    <string name="phone.number">Phone number</string>
+    <string name="check.username.password">Check your username and password again</string>
+    <string name="incorrect.phone.password">Incorrect phone or password</string>
+    <string name="fail.login">Fail to login</string>
+    <string name="login">Log in</string>
+    <string name="forgot.psd">Forgot password?</string>
+    <string name="sign.up">Sign up</string>
+    <!--register-->
+    <string name="name">Name</string>
+    <string name="psd">Password</string>
+    <string name="confirm.psd">Confirm password</string>
+    <string name="next">Next</string>
+    <string name="agree">Agree</string>
+    <string name="register">Register</string>
+    <string name="enter.verification">Please enter verification code</string>
+    <string name="send.again">Send verification code again</string>
+    <string name="sms.sent">An sms with verification code has sent to your phone</string>
+    <string name="resend.second">Resend after %1$s seconds</string>
+    <string name="psd.exp">Password must contain at least 6 characters and no white space</string>
+    <string name="psd.match">Password should match.</string>
+    <string name="verify">Verify</string>
 </resources>

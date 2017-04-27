@@ -1,6 +1,9 @@
 package com.ecnu.security.Util;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.text.method.PasswordTransformationMethod;
+import android.widget.EditText;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -9,12 +12,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Phuylai on 2017/4/26.
  */
 
 public class StringUtil {
+    private static final Pattern PASSWORD_PATTERN = Pattern
+            .compile("^[\\Sa-zA-Z0-9_.]{6,15}$");
+    private static final Pattern EMAIL_PATTERN = Pattern
+            .compile("^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
     /**
      * check if the string is null
      * @param str
@@ -144,6 +153,14 @@ public class StringUtil {
         return String.valueOf(minute);
     }
 
+    public static void setPassWordEditTextHintType(EditText editText) {
+        if (editText == null) {
+            return;
+        }
+        editText.setTypeface(Typeface.DEFAULT);
+        editText.setTransformationMethod(new PasswordTransformationMethod());
+    }
+
     /*
     convert from Date to String
     * */
@@ -182,6 +199,15 @@ public class StringUtil {
     public static String currencyFormat(double unitPrice){
         DecimalFormat format = new DecimalFormat("#,###,###.##");
         return format.format(unitPrice);
+    }
+
+    public static boolean checkPassWord(String password) {
+        return PASSWORD_PATTERN.matcher(password).matches();
+    }
+
+    public static boolean isTrueEmail(String email) {
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
+        return matcher.matches() != false;
     }
 
 }

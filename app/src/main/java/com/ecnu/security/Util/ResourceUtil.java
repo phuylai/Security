@@ -2,11 +2,16 @@ package com.ecnu.security.Util;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.ecnu.security.R;
 
@@ -131,5 +136,113 @@ public class ResourceUtil {
         lp.topMargin = marginTop;
         view.setLayoutParams(lp);
     }
+
+    public static void setEditTextMaxLength(EditText editText, int maxLength) {
+        InputFilter[] filters = new InputFilter[] { new InputFilter.LengthFilter(
+                maxLength) };
+        editText.setFilters(filters);
+    }
+
+    /*
+   * set text for the warning textview
+   * */
+    public static void setWarningText(TextView textView, int textId) {
+        if (textId < 0) {
+            hiddenWarning(textView);
+            return;
+        }
+        setVisible(true, textView);
+        if (textView == null) {
+            return;
+        }
+
+        textView.setText(textId);
+    }
+
+    /*
+hide the warning textview
+* */
+    public static void hiddenWarning(TextView textView) {
+        if (textView == null) {
+            return;
+        }
+        textView.setVisibility(View.INVISIBLE);
+    }
+
+    public static void setVisibility(View view, int visibility) {
+        if (view == null) {
+            return;
+        }
+
+        if (view.getVisibility() == visibility) {
+            return;
+        }
+
+        view.setVisibility(visibility);
+    }
+
+    private static void setVisibilityGone(View view) {
+        setVisibility(view, View.GONE);
+    }
+
+    public static void setVisible(boolean visible, View view) {
+        if (visible) {
+            setVisibilityVisible(view);
+        } else {
+            setVisibilityGone(view);
+        }
+    }
+
+    private static void setVisibilityVisible(View view) {
+        setVisibility(view, View.VISIBLE);
+    }
+
+    /**
+     * set top maring for warning text in linear layout
+     */
+    public static void setWarningTopMarginByLinearLayout(Context context,
+                                                         TextView textView) {
+        if (textView == null) {
+            return;
+        }
+        android.widget.LinearLayout.LayoutParams lp = (android.widget.LinearLayout.LayoutParams) textView
+                .getLayoutParams();
+        lp.topMargin = getDimenPx(context,
+                R.dimen.twenty_dp);
+        textView.setLayoutParams(lp);
+    }
+
+    public static int getDimenPx(Context context, int dimenId) {
+        if (context == null) {
+            return 0;
+        }
+
+        return context.getResources().getDimensionPixelOffset(dimenId);
+    }
+
+    /**
+     * To recycle the bitmap when activity is destroyed
+     * @author phuylai
+     * @param view
+     */
+
+    public static void recycleBackground(View view) {
+        if (view == null) {
+            return;
+        }
+        Drawable drawable = view.getBackground();
+        if (!(drawable instanceof BitmapDrawable)) {
+            drawable = null;
+            return;
+        }
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        if (bitmap != null && !bitmap.isRecycled()) {
+            bitmap.recycle();
+            bitmap = null;
+        }
+        bitmapDrawable = null;
+    }
+
 }
 
