@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WIAS</string>
+    <string name="title_home">主界</string>
+    <string name="title_dashboard">模式</string>
+    <string name="title_notifications">设置</string>
+</resources>
