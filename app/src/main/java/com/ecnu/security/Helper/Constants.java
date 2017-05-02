@@ -31,6 +31,11 @@ public class Constants {
     public static final String LOGOUT_REASON = "LOGOUT_REASON";
     public final static String POP_TO_HOMELIST_BACKNAME = "HOMELIST_FRAGMENT";
 
+    //message what value
+    public static final int ERROR_INDEX = -1;
+    public static final int SECOND_TICK = -5;
+    public static final int TIMER_END = -6;
+
     //user
     public final static String PARAM_USERNAME = "username";
     public final static String PARAM_PASSWORD = "password";

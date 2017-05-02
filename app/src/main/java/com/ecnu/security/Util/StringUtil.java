@@ -210,4 +210,13 @@ public class StringUtil {
         return matcher.matches() != false;
     }
 
+    public static boolean matchREGEX(String REGEX, String matchString) {
+        Pattern pattern = Pattern.compile(REGEX);
+        return matchREGEX(pattern, matchString);
+    }
+
+    public static boolean matchREGEX(Pattern pattern, String matchString) {
+        return pattern.matcher(matchString).matches();
+    }
+
 }

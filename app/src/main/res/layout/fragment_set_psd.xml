@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMain"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/rl_reset_psd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_reset_psd_new"
+            style="@style/forgot_psd_edittext"
+            android:hint="@string/enter.new.psd"
+            android:textColor="@color/colorWhite"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/et_reset_psd_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/captcha_height"
+            android:layout_below="@id/et_reset_psd_new"
+            android:layout_marginLeft="@dimen/twenty_dp"
+            android:layout_marginRight="@dimen/twenty_dp"
+            android:textColor="@color/colorWhite"
+            android:hint="@string/confirm.new.psd"
+            android:inputType="textPassword" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_reset_psd_reset"
+        style="@style/register_button"
+        android:layout_below="@id/et_reset_psd_confirm"
+        android:layout_marginTop="@dimen/thirty_dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/register" />
+
+    <TextView
+        android:id="@+id/tv_warning_reset"
+        style="@android:style/TextAppearance.Small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:layout_below="@id/btn_reset_psd_reset"
+        android:gravity="center_horizontal"
+        />
+</LinearLayout>

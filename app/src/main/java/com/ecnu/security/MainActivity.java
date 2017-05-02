@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.ecnu.security.Helper.Constants;
@@ -26,7 +27,7 @@ public class MainActivity extends BaseActivity {
     //TODO: model to load in
 
     public Toolbar toolbar = null;
-    private BottomNavigationView bottomNavigationView;
+    protected BottomNavigationView bottomNavigationView;
 
     protected BaseFragment currentFragment = null;
     private MainPageFragment mainPageFragment;
@@ -63,10 +64,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void findViews() {
+        super.findViews();
         fragmentManager = getSupportFragmentManager();
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         initFragment();
-        super.findViews();
     }
 
     protected void initFragment(){
@@ -77,7 +78,6 @@ public class MainActivity extends BaseActivity {
     protected void initActionBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //TODO: if the indicator function works, try to remove the below code
         actionBar = getSupportActionBar();
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -273,6 +273,14 @@ public class MainActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(enable);
         actionBar.setHomeButtonEnabled(enable);
         actionBar.setDisplayShowHomeEnabled(enable);
+    }
+
+    protected void setBottomNavigationView(boolean enable){
+        if(enable){
+            bottomNavigationView.setVisibility(View.VISIBLE);
+        }else{
+            bottomNavigationView.setVisibility(View.GONE);
+        }
     }
 
 }

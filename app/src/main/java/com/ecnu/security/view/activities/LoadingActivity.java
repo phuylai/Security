@@ -87,14 +87,22 @@ public class LoadingActivity extends BaseActivity{
 
                 @Override
                 public void onFailure(int code, String message) {
-                    //goToLogin();
+                    goToLogin();
                 }
             });
+        }else{
+            goToLogin();
         }
     }
 
     private void goToMainActivity(){
         Intent intent = new Intent(LoadingActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void goToLogin(){
+        Intent intent = new Intent(LoadingActivity.this,LoginActivity.class);
         startActivity(intent);
         finish();
     }

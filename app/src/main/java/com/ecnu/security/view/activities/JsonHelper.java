@@ -22,4 +22,16 @@ public class JsonHelper {
         }
         return "";
     }
+
+    public static String getClientId(String message) {
+        try {
+            JSONObject object = new JSONObject(message);
+            if(object.has(Constants.PARAM_CLIENTID)){
+                return object.getString(Constants.PARAM_CLIENTID);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }

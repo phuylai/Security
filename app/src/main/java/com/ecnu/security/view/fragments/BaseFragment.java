@@ -133,10 +133,10 @@ public abstract  class BaseFragment extends Fragment {
     }
 
     public boolean onBackPressed(){
-        if(backIndicator){
+        /*if(backIndicator){
             activity.goToMainPageFragment();
             return true;
-        }
+        }*/
         return false;
     }
 }

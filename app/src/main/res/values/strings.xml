@@ -25,4 +25,12 @@
     <string name="psd.exp">Password must contain at least 6 characters and no white space</string>
     <string name="psd.match">Password should match.</string>
     <string name="verify">Verify</string>
+    <!--forget psd-->
+    <string name="enter.captcha">Enter Captcha</string>
+    <string name="get.captcha">Get Captcha</string>
+    <string name="enter.new.psd">Enter New Password</string>
+    <string name="confirm.new.psd">Confirm New Password</string>
+    <string name="reset">Reset</string>
+    <string name="reset.psd">Reset Password</string>
+    <string name="cannot.captcha">Your cannot get a captcha for this phone number again</string>
 </resources>
