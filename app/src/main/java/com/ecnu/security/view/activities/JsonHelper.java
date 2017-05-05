@@ -34,4 +34,31 @@ public class JsonHelper {
         }
         return "";
     }
+
+    public static String getNickName(String message) {
+        try {
+            JSONObject object = new JSONObject(message);
+            if(object.has(Constants.PARAM_DATA)){
+                String data = object.getString(Constants.PARAM_DATA);
+                JSONObject info = new JSONObject(data);
+                String nickname = info.getString(Constants.PARAM_NICKNAME);
+                return nickname;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getData(String message) {
+        try {
+            JSONObject object = new JSONObject(message);
+            if(object.has(Constants.PARAM_DATA)){
+               return object.getString(Constants.PARAM_DATA);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }

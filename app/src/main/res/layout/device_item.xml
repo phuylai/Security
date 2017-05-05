@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/card_view"
+    android:layout_margin="@dimen/five_dp"
+    card_view:cardCornerRadius="@dimen/five_dp"
+    card_view:cardElevation="@dimen/five_dp"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardUseCompatPadding="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardBackgroundColor="@color/colorWhite">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/five_dp">
+
+        <ImageView
+            android:id="@+id/iv_user"
+            android:layout_width="@dimen/thirty_dp"
+            android:layout_height="@dimen/thirty_dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_electrical_sensor"
+            />
+
+        <LinearLayout
+            android:id="@+id/ll_content"
+            android:layout_toEndOf="@id/iv_user"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/iv_user"
+            android:layout_marginLeft="@dimen/ten_dp"
+            android:layout_marginTop="@dimen/three_dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_device_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/detail_item_actionname"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/small_text"
+            android:textColor="@color/text.grey"
+            android:maxLines="1"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:layout_marginLeft="@dimen/ten_dp"
+            android:layout_marginTop="@dimen/three_dp"
+            android:layout_below="@id/ll_content"
+            android:layout_toRightOf="@id/iv_user"
+            />
+
+        <ImageView
+            android:id="@+id/iv_action"
+            android:src="@drawable/ic_right_driver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

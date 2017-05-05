@@ -107,6 +107,16 @@ public class MyPreference {
         editor.apply();
     }
 
+    public void setNickname(String name){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_NICKNAME,name);
+        editor.apply();
+    }
+
+    public String getNickName(){
+        return settings.getString(Constants.PARAM_NICKNAME,"");
+    }
+
     public LanguageType getLanguageType() {
         String languageStr = settings.getString(Constants.PARAM_LANGUAGE,
                 null);

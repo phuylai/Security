@@ -3,6 +3,10 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Mode</string>
     <string name="title_notifications">Setting</string>
+    <!--sign out-->
+    <string name="sign.out">Sign Out</string>
+    <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
     <!--login-->
     <string name="phone.number">Phone number</string>
     <string name="check.username.password">Check your username and password again</string>
@@ -33,4 +37,38 @@
     <string name="reset">Reset</string>
     <string name="reset.psd">Reset Password</string>
     <string name="cannot.captcha">Your cannot get a captcha for this phone number again</string>
+    <!--profile-->
+    <string name="profile">Profile</string>
+    <string name="change.password">Change Password</string>
+    <string name="change.phonne">Change Phone Number</string>
+    <string name="change.name">Change Username</string>
+    <string name="device.list">Device List</string>
+    <string name="add.device">Add New Device</string>
+    <!--setting-->
+    <string name="setting">Setting</string>
+    <string name="input.old.psd">Enter Old Password</string>
+    <string name="submit">Submit</string>
+    <string name="not.set">Not Set</string>
+    <string name="old.incorrect">Old Password Incorrect</string>
+    <string name="changed">Changed</string>
+    <string name="wifi">WiFi Name</string>
+    <string name="search">Search</string>
+    <!--bind-->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="reminder">Reminder</string>
+    <string name="reminder.bind">Are you sure to bind this device?</string>
+    <!--device info-->
+    <string name="device.info">Detail</string>
+    <string name="device.name">Name</string>
+    <string name="device.id">ID</string>
+    <string name="devie.sub">Sub</string>
+    <string name="device.mac">MAC</string>
+    <string name="device.role">Role</string>
+    <string name="device.edit">Edit</string>
+    <string name="role.1">Super User</string>
+    <string name="role.2">Admin</string>
+    <string name="role.3">User</string>
+    <string name="unbind">Unbind</string>
+    <string name="confirm.unbind">Are you sure to unbind?</string>
 </resources>

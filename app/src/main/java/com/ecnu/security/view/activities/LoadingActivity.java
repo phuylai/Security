@@ -10,10 +10,12 @@ import android.view.View;
 
 import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.MainActivity;
+import com.ecnu.security.Model.MicoUserExt;
 import com.ecnu.security.R;
 import com.ecnu.security.Util.MyPreference;
 import com.ecnu.security.Util.ResourceUtil;
 import com.ecnu.security.Util.StringUtil;
+import com.ecnu.security.Util.ToastUtil;
 
 import io.fog.callbacks.MiCOCallBack;
 import io.fog.fog2sdk.MiCOUser;
@@ -81,8 +83,9 @@ public class LoadingActivity extends BaseActivity{
             miCOUser.refreshToken(token, new MiCOCallBack() {
                 @Override
                 public void onSuccess(String message) {
-                    myPreference.setToken(JsonHelper.getFogToken(message));
-                    goToMainActivity();
+                    String token = JsonHelper.getFogToken(message);
+                    myPreference.setToken(token);
+                    getUserInfo(token);
                 }
 
                 @Override
@@ -93,6 +96,23 @@ public class LoadingActivity extends BaseActivity{
         }else{
             goToLogin();
         }
+    }
+
+    private void getUserInfo(String token){
+        MicoUserExt micoUserExt = new MicoUserExt();
+        micoUserExt.getUserInfo(new MiCOCallBack() {
+            @Override
+            public void onSuccess(String message) {
+                String nickname = JsonHelper.getNickName(message);
+                myPreference.setNickname(nickname);
+            }
+
+            @Override
+            public void onFailure(int code, String message) {
+                ToastUtil.showToast(message);
+            }
+        },token);
+        goToMainActivity();
     }
 
     private void goToMainActivity(){

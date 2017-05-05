@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/twenty_dp">
+    <EditText
+        android:id="@+id/et_ssid"
+        android:padding="@dimen/ten_dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:drawableLeft="@drawable/ic_wifi_icon"
+        android:background="@drawable/edittext_shape"
+        android:hint="@string/wifi"
+        android:maxLines="1"
+        android:textColor="@color/colorMain"
+        />
+    <EditText
+        android:id="@+id/et_psd"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:padding="@dimen/ten_dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:drawableLeft="@drawable/ic_password"
+        android:background="@drawable/edittext_shape"
+        android:hint="@string/psd"
+        android:maxLines="1"
+        android:textColor="@color/colorMain"
+        />
+
+    <Button
+        android:id="@+id/btn"
+        style="@style/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_password"
+        android:layout_marginTop="@dimen/twenty_dp"
+        android:text="@string/search" />
+
+    <View
+        android:layout_marginTop="@dimen/twenty_dp"
+        android:id="@+id/detail_item_line"
+        style="@style/grey_line_style"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="@dimen/ten_dp"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

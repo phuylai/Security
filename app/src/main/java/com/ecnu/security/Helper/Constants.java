@@ -14,6 +14,23 @@ public class Constants {
         return _APPID;
     }
 
+    public static String SERVICE_NAME = "_easylink._tcp.local.";
+
+    //url
+    public static String _APIHOST = "https://v2.fogcloud.io";
+
+    private static String _URLHEAD() {
+        return _APIHOST + "/enduser/";
+    }
+
+    public static String UPDATENAME() {
+        return _URLHEAD() + "updateUserInfo/";
+    }
+
+    public static String GETUSERINFO(){
+        return _URLHEAD() + "getUserInfo/";
+    }
+
     //debug true or false
     public static final boolean DEBUG_ENABLE = true;
 
@@ -43,14 +60,11 @@ public class Constants {
     public final static String PARAM_TOKEN = "token";
     public final static String PARAM_FOG_HOST = "foghost";
     public final static String PARAM_APP_ID = "fogappid";
+    public final static String PARAM_NICKNAME = "nickname";
+    public final static String PARAM_DATA = "data";
 
     //Language
     public static final String PARAM_LANGUAGE = "language";
-
-    //BANNER
-    public static final String PARAM_URL = "url";
-    public static final String PARAM_GOTO = "goTo";
-    public static final String PARAM_TITLE = "title";
 
     //password
     public static final String PASSWORD_RULES_REGEX = "^[\\Sa-zA-Z0-9_.]{6,15}$";
@@ -60,6 +74,39 @@ public class Constants {
 
     //Register
     public static final String PARAM_ACCOUNT = "account";
+
+    //Fragment
+    public static final String FRAG_SETTING = "Setting";
+    public static final String FRAG_DETAIL = "Detail";
+
+    //Bunlde
+    public static final String PARAM_VALUE = "value";
+    public static final String PARAM_ACTION = "action";
+
+    //device
+    public static final int PARAM_FIND = 100;
+    public static final String PARAM_UNCHECK = "UNCHECK";
+    public static final String PARAM_DEV_NAME = "Name";
+    public static final String PARAM_IP = "IP";
+    public static final String PARAM_MAC = "MAC";
+    public static final String PARAM_PORT = "Port";
+    public static final String PARAM_SUPER_USER = "IsHaveSuperUser";
+    public static final String PARAM_PRODUCT_ID = "FogProductId";
+    public static final String PARAM_REMAIN = "RemainingUserNumber";
+    public static final String PARAM_MODEL = "Model";
+    public static final String PARAM_PROTOCOL = "Protocol";
+    public static final String PARAM_PW = "device_pw";
+    public static final String PARAM_DEVNAME = "device_name";
+    public static final String PARAM_SUB = "is_sub";
+    public static final String PARAM_mac = "mac";
+    public static final String PARAM_ONLINE = "online";
+    public static final String PARAM_DEV_ID = "device_id";
+    public static final String PARAM_ROLE = "role";
+
+
+
+
+
 
 
 }

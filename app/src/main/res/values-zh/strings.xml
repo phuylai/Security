@@ -5,6 +5,8 @@
     <string name="title_dashboard">模式</string>
     <string name="title_notifications">设置</string>
     <!--login-->
+    <string name="cancel">取消</string>
+    <string name="back">关闭</string>
     <string name="phone.number">手机号码</string>
     <string name="check.username.password">请检查用户名和密码</string>
     <string name="incorrect.phone.password">用户名或密码错误</string>
@@ -34,4 +36,38 @@
     <string name="reset">重设</string>
     <string name="cannot.captcha">此手机号有不同于获取验证码手机号</string>
     <string name="reset.psd">重设密码</string>
+    <!--profile-->
+    <string name="profile">账号</string>
+    <string name="change.password">更改密码</string>
+    <string name="change.phonne">更改手机号码</string>
+    <string name="change.name">更改用户名</string>
+    <string name="device.list">设备列表</string>
+    <string name="add.device">添加设备</string>
+    <!--setting-->
+    <string name="setting">设置</string>
+    <string name="input.old.psd">输入旧密码</string>
+    <string name="submit">提交</string>
+    <string name="not.set">未设置</string>
+    <string name="old.incorrect">旧密码不正确</string>
+    <string name="changed">更改成功</string>
+    <string name="wifi">无线名称</string>
+    <string name="search">搜索</string>
+    <!--bind-->
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="reminder">提示</string>
+    <string name="reminder.bind">是否要绑定该设备?</string>
+    <!--device info-->
+    <string name="device.info">设备详情</string>
+    <string name="device.name">名称</string>
+    <string name="device.id">设备号</string>
+    <string name="devie.sub">子设备</string>
+    <string name="device.mac">MAC</string>
+    <string name="device.role">权限</string>
+    <string name="device.edit">编辑</string>
+    <string name="role.1">超级用户</string>
+    <string name="role.2">管理员</string>
+    <string name="role.3">普通用户</string>
+    <string name="unbind">解绑</string>
+    <string name="confirm.unbind">是否确定解绑?</string>
 </resources>

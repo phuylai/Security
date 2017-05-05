@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -13,7 +14,10 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.MainActivity;
+import com.ecnu.security.R;
+import com.ecnu.security.Util.ResourceUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,10 +34,12 @@ public abstract  class BaseFragment extends Fragment {
     protected Context context;
     protected Resources resources;
     protected Toolbar toolbar;
+    protected BottomNavigationView bottomNavigationView;
     protected boolean backIndicator = false;
+    protected boolean bottomView = true;
 
     protected Map<String,SelectedItemCallBackListener> listenerMap = new HashMap<>();
-    private interface SelectedItemCallBackListener{
+    public interface SelectedItemCallBackListener{
         void onItemSelected(Object selectedItem);
     }
 
@@ -44,10 +50,17 @@ public abstract  class BaseFragment extends Fragment {
         resources = context.getResources();
         activity = (MainActivity) getActivity();
         toolbar = activity.toolbar;
+        bottomNavigationView = activity.bottomNavigationView;
     }
 
     public void setBackIndicator(){
         activity.setBackIndicator(backIndicator);
+        toolbar.setBackgroundColor(ResourceUtil.getColor(R.color.colorPrimary));
+    }
+
+    public void setBottomView(){
+        activity.setBottomNavigationView(bottomView);
+        bottomNavigationView.setBackgroundColor(ResourceUtil.getColor(R.color.colorPrimary));
     }
 
     @Nullable
@@ -71,6 +84,7 @@ public abstract  class BaseFragment extends Fragment {
         if(activity instanceof MainActivity){
             this.activity = (MainActivity) activity;
             setBackIndicator();
+            setBottomView();
             changeTitle();
             this.activity.onFragmentResume(this);
         }

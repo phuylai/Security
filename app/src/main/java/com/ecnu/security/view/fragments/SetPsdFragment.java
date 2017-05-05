@@ -43,6 +43,8 @@ public class SetPsdFragment extends BaseFragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutId = R.layout.fragment_set_psd;
+        backIndicator = true;
+        bottomView = false;
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

@@ -134,10 +134,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     if(!StringUtil.isNull(token) && !StringUtil.isNull(clientId)) {
                         preference.setClientID(clientId);
                         preference.setToken(token);
+                        preference.setUsername(username);
+                        preference.setPassword(password);
                         MLog.i(TAG, token);
                         goToMainActivity();
                     }else{
                         showToast(R.string.fail_login);
+                        enableLogIn();
                     }
                 }
 

@@ -1,19 +1,26 @@
 package com.ecnu.security.Util;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.provider.CalendarContract;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.common.design.MaterialDialog;
+import com.ecnu.security.Model.DeviceModel;
 import com.ecnu.security.R;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by Phuylai on 2017/4/25.
@@ -242,6 +249,20 @@ hide the warning textview
             bitmap = null;
         }
         bitmapDrawable = null;
+    }
+
+    /**
+     * set top maring for warning text in relative layout
+     */
+    public static void setWarningTopMarginByRelativeLayout(Context context,
+                                                           TextView textView) {
+        if (textView == null) {
+            return;
+        }
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) textView.getLayoutParams();
+        lp.topMargin = ResourceUtil.getDimenPx(context,
+                R.dimen.twenty_dp);
+        textView.setLayoutParams(lp);
     }
 
 }

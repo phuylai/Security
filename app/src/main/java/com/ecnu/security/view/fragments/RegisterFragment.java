@@ -47,7 +47,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
 
     private MiCOUser miCOUser = new MiCOUser();
 
-    private MyPreference myPreference;
+    protected MyPreference myPreference;
 
     private final Handler handler = new Handler(){
         @Override
@@ -108,6 +108,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutId = R.layout.fragment_forget_password;
         backIndicator = true;
+        bottomView = false;
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -178,15 +179,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
         miCOUser.checkVerifyCode(phone, captcha, Constants._APPID(), new MiCOCallBack() {
             @Override
             public void onSuccess(String message) {
-                String token = JsonHelper.getFogToken(message);
-                String clientId = JsonHelper.getClientId(message);
-                myPreference.setUsername(phone);
-                myPreference.setClientID(clientId);
-                myPreference.setToken(token);
-                AccountModel model = new AccountModel(phone,token,clientId);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(Constants.PARAM_ACCOUNT,model);
-                goToSetPassword(bundle);
+                goOnNext(phone,message);
             }
 
             @Override
@@ -194,6 +187,18 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
                 ToastUtil.showToastShort(getActivity(),message);
             }
         });
+    }
+
+    protected void goOnNext(String phone,String message){
+        String token = JsonHelper.getFogToken(message);
+        String clientId = JsonHelper.getClientId(message);
+        myPreference.setUsername(phone);
+        myPreference.setClientID(clientId);
+        myPreference.setToken(token);
+        AccountModel model = new AccountModel(phone,token,clientId);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.PARAM_ACCOUNT,model);
+        goToSetPassword(bundle);
     }
 
     protected void goToSetPassword(Bundle bundle){

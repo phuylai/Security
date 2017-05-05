@@ -1,5 +1,6 @@
 package com.ecnu.security;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -12,11 +13,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.ecnu.security.Controller.FragmentFactory;
 import com.ecnu.security.Helper.Constants;
+import com.ecnu.security.Helper.MLog;
+import com.ecnu.security.Util.MyPreference;
 import com.ecnu.security.Util.StringUtil;
 import com.ecnu.security.view.activities.BaseActivity;
+import com.ecnu.security.view.activities.LoginActivity;
 import com.ecnu.security.view.fragments.BaseFragment;
 import com.ecnu.security.view.fragments.MainPageFragment;
+import com.ecnu.security.view.fragments.SettingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +33,11 @@ public class MainActivity extends BaseActivity {
     //TODO: model to load in
 
     public Toolbar toolbar = null;
-    protected BottomNavigationView bottomNavigationView;
+    public BottomNavigationView bottomNavigationView;
 
     protected BaseFragment currentFragment = null;
     private MainPageFragment mainPageFragment;
+    private SettingFragment settingFragment;
     protected FragmentManager fragmentManager = null;
     private List<BaseFragment> topFragments = new ArrayList<>();
     protected FragmentTransaction transaction = null;
@@ -42,14 +49,20 @@ public class MainActivity extends BaseActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                   //do s.th
+                    goToMainPageFragment();
                     return true;
-                case R.id.navigation_dashboard:
+                case R.id.navigation_mode:
                     //do s.th
                     return true;
-                case R.id.navigation_notifications:
-                    //do s.th
-                    return true;
+                case R.id.navigation_setting:
+                    if(currentFragment != null && currentFragment == settingFragment){
+                        return true;
+                    }else {
+                        settingFragment = (SettingFragment) FragmentFactory.getFragment(Constants.
+                                FRAG_SETTING,null,null);
+                        goToFragment(settingFragment);
+                        return true;
+                    }
             }
             return false;
         }
@@ -90,6 +103,8 @@ public class MainActivity extends BaseActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+
+
     public void goToMainPageFragment(){
         if(currentFragment != null && currentFragment == mainPageFragment){
             return;
@@ -101,6 +116,7 @@ public class MainActivity extends BaseActivity {
         mainPageFragment = new MainPageFragment();
         skipToFragmentByContentId(mainPageFragment,R.id.content,false, Constants.POP_TO_HOME,0,0);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -275,12 +291,27 @@ public class MainActivity extends BaseActivity {
         actionBar.setDisplayShowHomeEnabled(enable);
     }
 
-    protected void setBottomNavigationView(boolean enable){
+    public void setBottomNavigationView(boolean enable){
         if(enable){
             bottomNavigationView.setVisibility(View.VISIBLE);
         }else{
             bottomNavigationView.setVisibility(View.GONE);
         }
+    }
+
+    public void logOut() {
+
+        // CLEAN PASSWORD FROM SHARED PREFERENCES
+        MyPreference preference = MyPreference.getInstance(this);
+        preference.setPassword("");
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        startActivity(intent);
+        finish();
+
+        MLog.e("CMD_LOGOUT","SUCCESS");
     }
 
 }

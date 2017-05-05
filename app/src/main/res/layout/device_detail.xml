@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/ten_dp"
+    android:stretchColumns="*">
+
+    <TextView  android:layout_gravity="center_horizontal"
+        android:text="@string/device.info"
+        android:textSize="@dimen/medium_text"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center_horizontal"/>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView android:text="@string/device.name" style="@style/item_detail_style" android:maxLines="1"
+                android:ellipsize="end"/>
+            <TextView android:id="@+id/tv_name"
+                style="@style/item_detail_style"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView android:text="@string/device.id" style="@style/item_detail_style"
+                />
+            <TextView android:id="@+id/tv_id" style="@style/item_detail_style"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView android:text="@string/devie.sub" style="@style/item_detail_style"
+                />
+            <TextView android:id="@+id/tv_sub"   style="@style/item_detail_style"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView android:text="@string/device.mac" style="@style/item_detail_style"/>
+            <TextView android:id="@+id/tv_mac"  style="@style/item_detail_style"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView android:text="@string/device.role"  style="@style/item_detail_style"
+               />
+            <TextView android:id="@+id/tv_role"   style="@style/item_detail_style"/>
+        </TableRow>
+
+</TableLayout>
