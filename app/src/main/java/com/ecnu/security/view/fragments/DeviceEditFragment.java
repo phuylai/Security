@@ -100,19 +100,6 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
         baseViewHolders.add(baseViewHolder);
     }
 
-    protected void addView(View view) {
-        if (view == null) {
-            return;
-        }
-        if (bodyView == null) {
-            return;
-        }
-        if(view.getParent() != null){
-            bodyView.removeAllViews();
-        }
-        bodyView.addView(view);
-    }
-
     private void setDetail(){
         if(detailItemHolders.size() > 0)
             detailItemHolders.clear();

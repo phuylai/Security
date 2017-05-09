@@ -1,5 +1,7 @@
 package com.ecnu.security.Model;
 
+import com.ecnu.security.Helper.Constants;
+
 /**
  * Created by Phuylai on 2017/5/3.
  */
@@ -7,7 +9,8 @@ package com.ecnu.security.Model;
 public enum ActionType {
 
     PASSWORD("password"),PHONE("phone"),NAME("name"),DEV_LIST("dev_list"),ADD_DEV("add_dev"),
-    ONLINE("online");
+    ONLINE("online"),PEACE(Constants.MODE_PEACE),PANIC(Constants.MODE_PANIC),AWAY(Constants.MODE_AWAY),
+    WORK(Constants.MODE_WORK);
 
     private final String text;
 
@@ -41,6 +44,18 @@ public enum ActionType {
         }
         if(ONLINE.equal(value)){
             return ONLINE;
+        }
+        if(AWAY.equal(value)){
+            return AWAY;
+        }
+        if(PEACE.equal(value)){
+            return PEACE;
+        }
+        if(PANIC.equal(value)){
+            return PANIC;
+        }
+        if(WORK.equal(value)){
+            return WORK;
         }
         return ADD_DEV;
     }

@@ -148,6 +148,7 @@ public class DeviceModel implements Serializable{
         this.devId = devId;
     }
 
+
     public String getProtocol() {
         return protocol;
     }

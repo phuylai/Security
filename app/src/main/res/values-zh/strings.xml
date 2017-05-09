@@ -70,4 +70,16 @@
     <string name="role.3">普通用户</string>
     <string name="unbind">解绑</string>
     <string name="confirm.unbind">是否确定解绑?</string>
+    <!--main page-->
+    <string name="on">开</string>
+    <string name="off">关</string>
+    <string name="on.off.system">报警系统</string>
+    <string name="on.off.alert">警戒状态蜂鸣器</string>
+    <string name="on.off.danger">危险状态蜂鸣器</string>
+    <string name="on.off.led">LED灯</string>
+    <!--mode-->
+    <string name="peace">关闭模式</string>
+    <string name="panic">警戒模式</string>
+    <string name="away">离开模式</string>
+    <string name="work">正常模式</string>
 </resources>

@@ -16,6 +16,10 @@ public class Constants {
 
     public static String SERVICE_NAME = "_easylink._tcp.local.";
 
+    public static String CLOUD_PORT = "1883";
+
+    public static String LISTEN_HOST = "v2.fogcloud.io";
+
     //url
     public static String _APIHOST = "https://v2.fogcloud.io";
 
@@ -34,7 +38,6 @@ public class Constants {
     //debug true or false
     public static final boolean DEBUG_ENABLE = true;
 
-    public static final int REQUEST_IMAGE = 9;
 
     public final static String POP_TO_HOME = "HOMELIST_FRAGMENT";
 
@@ -61,7 +64,11 @@ public class Constants {
     public final static String PARAM_FOG_HOST = "foghost";
     public final static String PARAM_APP_ID = "fogappid";
     public final static String PARAM_NICKNAME = "nickname";
+    public final static String PARAM_REALNAME = "realname";
     public final static String PARAM_DATA = "data";
+    public final static String PARAM_PAYLOAD = "payload";
+    public final static String PARAM_DEVICEINFO = "device_info";
+    public final static String PARAM_IR = "infrared_reflective";
 
     //Language
     public static final String PARAM_LANGUAGE = "language";
@@ -72,12 +79,20 @@ public class Constants {
     public static final int PASSWORD_MAXNUM = 15;
     public static final int FULLNAME_LENGTH = 64;
 
+    //mode
+    public static final String PARAM_MODE = "mode";
+    public static final String MODE_PEACE = "peace";
+    public static final String MODE_PANIC = "panic";
+    public static final String MODE_AWAY = "away";
+    public static final String MODE_WORK = "work";
+
     //Register
     public static final String PARAM_ACCOUNT = "account";
 
     //Fragment
     public static final String FRAG_SETTING = "Setting";
     public static final String FRAG_DETAIL = "Detail";
+    public static final String FRAG_MODE = "mode";
 
     //Bunlde
     public static final String PARAM_VALUE = "value";
@@ -102,7 +117,10 @@ public class Constants {
     public static final String PARAM_ONLINE = "online";
     public static final String PARAM_DEV_ID = "device_id";
     public static final String PARAM_ROLE = "role";
+    public static final String PARAM_DEVICE_ID = "deviceid";
 
+    //login
+    public static final String PARAM_LOGIN = "PARAM_LOGIN";
 
 
 

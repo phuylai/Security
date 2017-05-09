@@ -34,6 +34,7 @@ import com.ecnu.security.Util.ResourceUtil;
 import com.ecnu.security.Util.StringUtil;
 import com.ecnu.security.Util.ToastUtil;
 import com.ecnu.security.view.Adapter.DeviceAdapter;
+import com.ecnu.security.view.activities.JsonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,8 +43,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.fog.callbacks.ControlDeviceCallBack;
 import io.fog.callbacks.ManageDeviceCallBack;
 import io.fog.fog2sdk.MiCODevice;
+import io.fog.helper.ListenDevParFog;
 import io.fogcloud.easylink.helper.EasyLinkCallBack;
 import io.fogcloud.fog_mdns.helper.SearchDeviceCallBack;
 
@@ -70,6 +73,8 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
     private static final int MINUTE_SECOND = 60;
     private int secondCount = MINUTE_SECOND;
     private boolean isGetting = false;
+
+    private MyPreference myPreference;
 
     @Nullable
     @Override
@@ -164,6 +169,7 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
     @Override
     protected void findViews(View rootView) {
         miCODevice = new MiCODevice(activity);
+        myPreference = MyPreference.getInstance(activity);
         et_password = (EditText) rootView.findViewById(R.id.et_psd);
         et_ssid = (EditText) rootView.findViewById(R.id.et_ssid);
         btn = (Button) rootView.findViewById(R.id.btn);
@@ -222,7 +228,7 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void startEasyLink(String ssid, String password){
-        miCODevice.startEasyLink(ssid, password, true, 900, 20, "", "", new EasyLinkCallBack() {
+        miCODevice.startEasyLink(ssid, password, true, 60000, 20, "", "", new EasyLinkCallBack() {
             @Override
             public void onSuccess(int code, String message) {
                 MLog.i(TAG,message);
@@ -320,7 +326,11 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
         miCODevice.bindDevice(foundDevice.getIP(), foundDevice.getPort(), new ManageDeviceCallBack() {
             @Override
             public void onSuccess(String message) {
+                //return device ID
+                String id = JsonHelper.getDeviceId(message);
                 ToastUtil.showToastShort(activity,message);
+                listenDevice(id);
+                //getFragmentManager().popBackStack();
             }
 
             @Override
@@ -329,6 +339,36 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
             }
         },token);
     }
+
+    private void listenDevice(String id){
+        ListenDevParFog listenDevParFog = new ListenDevParFog();
+        listenDevParFog.userName = myPreference.getClientID();
+        listenDevParFog.deviceid = id;
+        listenDevParFog.host = Constants.LISTEN_HOST;
+        listenDevParFog.port = Constants.CLOUD_PORT;
+        listenDevParFog.passWord = myPreference.getPassword();
+        listenDevParFog.clientID = listenDevParFog.userName;
+        listenDevParFog.isencrypt = false;
+
+        miCODevice.startListenDevice(listenDevParFog, new ControlDeviceCallBack() {
+            @Override
+            public void onSuccess(String message) {
+                MLog.i("main",message);
+                ToastUtil.showToastLong(activity,message);
+                getFragmentManager().popBackStack();
+            }
+
+            @Override
+            public void onFailure(int code, String message) {
+                MLog.i("main",message);
+                ToastUtil.showToastLong(activity,message);
+                getFragmentManager().popBackStack();
+            }
+        });
+
+    }
+
+
 
     @Override
     public void no() {

@@ -50,6 +50,53 @@ public class JsonHelper {
         return "";
     }
 
+    public static String getRealname(String message) {
+        try {
+            JSONObject object = new JSONObject(message);
+            if(object.has(Constants.PARAM_DATA)){
+                String data = object.getString(Constants.PARAM_DATA);
+                JSONObject info = new JSONObject(data);
+                String realname = info.getString(Constants.PARAM_REALNAME);
+                return realname;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getDeviceId(String message) {
+        try {
+            JSONObject object = new JSONObject(message);
+            if(object.has(Constants.PARAM_DATA)){
+                String data = object.getString(Constants.PARAM_DATA);
+                JSONObject info = new JSONObject(data);
+                String id = info.getString(Constants.PARAM_DEVICE_ID);
+                return id;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static int getIR(String message) {
+        try {
+            JSONObject object = new JSONObject(message);
+            if(object.has(Constants.PARAM_PAYLOAD)){
+                String data = object.getString(Constants.PARAM_PAYLOAD);
+                JSONObject info = new JSONObject(data);
+                String deviceinfo = info.getString(Constants.PARAM_DEVICEINFO);
+                JSONObject device = new JSONObject(deviceinfo);
+                int ir = device.getInt(Constants.PARAM_IR);
+                return ir;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public static String getData(String message) {
         try {
             JSONObject object = new JSONObject(message);

@@ -16,21 +16,41 @@ import android.view.inputmethod.InputMethodManager;
 import com.ecnu.security.Controller.FragmentFactory;
 import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.Helper.MLog;
+import com.ecnu.security.Model.ActionType;
+import com.ecnu.security.Model.DeviceModel;
+import com.ecnu.security.Model.MicoUserExt;
 import com.ecnu.security.Util.MyPreference;
 import com.ecnu.security.Util.StringUtil;
+import com.ecnu.security.Util.ToastUtil;
 import com.ecnu.security.view.activities.BaseActivity;
+import com.ecnu.security.view.activities.JsonHelper;
 import com.ecnu.security.view.activities.LoginActivity;
 import com.ecnu.security.view.fragments.BaseFragment;
 import com.ecnu.security.view.fragments.MainPageFragment;
+import com.ecnu.security.view.fragments.ModeFragment;
 import com.ecnu.security.view.fragments.SettingFragment;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
+
+import io.fog.callbacks.ControlDeviceCallBack;
+import io.fog.callbacks.MiCOCallBack;
+import io.fog.fog2sdk.MiCODevice;
+import io.fog.helper.Configuration;
+import io.fog.helper.ListenDevParFog;
 
 public class MainActivity extends BaseActivity {
 
     public static final String tag = MainActivity.class.getSimpleName();
     //TODO: model to load in
+
+    public List<DeviceModel> deviceModels = new ArrayList<>();
+    private MyPreference myPreference;
 
     public Toolbar toolbar = null;
     public BottomNavigationView bottomNavigationView;
@@ -38,9 +58,14 @@ public class MainActivity extends BaseActivity {
     protected BaseFragment currentFragment = null;
     private MainPageFragment mainPageFragment;
     private SettingFragment settingFragment;
+    private ModeFragment modeFragment;
     protected FragmentManager fragmentManager = null;
     private List<BaseFragment> topFragments = new ArrayList<>();
     protected FragmentTransaction transaction = null;
+
+    private MiCODevice miCODevice;
+
+    public String message = null;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -52,8 +77,14 @@ public class MainActivity extends BaseActivity {
                     goToMainPageFragment();
                     return true;
                 case R.id.navigation_mode:
-                    //do s.th
-                    return true;
+                    if(currentFragment != null && currentFragment == modeFragment){
+                        return true;
+                    }else {
+                        modeFragment = (ModeFragment) FragmentFactory.getFragment(Constants.
+                                FRAG_MODE,null,null);
+                        goToFragment(modeFragment);
+                        return true;
+                    }
                 case R.id.navigation_setting:
                     if(currentFragment != null && currentFragment == settingFragment){
                         return true;
@@ -73,6 +104,154 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         layoutId = R.layout.activity_main;
         super.onCreate(savedInstanceState);
+        parseArgument();
+    }
+
+    private void parseArgument(){
+        myPreference = MyPreference.getInstance(this);
+        Bundle bundle = this.getIntent().getExtras();
+        if(bundle != null){
+            String login = bundle.getString(Constants.PARAM_LOGIN);
+            if(!StringUtil.isNull(login)){
+                getUserInfo();
+            }else {
+                deviceModels = (List<DeviceModel>) bundle.getSerializable(Constants.PARAM_VALUE);
+                listenToDevices();
+            }
+        }
+    }
+
+    private void getUserInfo() {
+        String token = myPreference.getToken();
+        final MicoUserExt micoUserExt = new MicoUserExt();
+        micoUserExt.getUserInfo(new MiCOCallBack() {
+            @Override
+            public void onSuccess(String message) {
+                String nickname = JsonHelper.getNickName(message);
+                String mode = JsonHelper.getRealname(message);
+                if(!StringUtil.isNull(mode)){
+                    myPreference.setMode(mode);
+                }else{
+                    myPreference.setMode(ActionType.WORK.toString());
+                    micoUserExt.setMode(ActionType.WORK.toString(), new MiCOCallBack() {
+                        @Override
+                        public void onSuccess(String message) {
+                            MLog.i("main",message);
+                        }
+
+                        @Override
+                        public void onFailure(int code, String message) {
+                            MLog.i("main",message);
+                        }
+                    },myPreference.getToken());
+                }
+                myPreference.setNickname(nickname);
+            }
+
+            @Override
+            public void onFailure(int code, String message) {
+                ToastUtil.showToast(message);
+            }
+        },token);
+        getDevices();
+    }
+
+    private void getDevices(){
+        String token = MyPreference.getInstance(this).getToken();
+        MiCODevice miCODevice = new MiCODevice(this);
+        miCODevice.getDeviceList(new MiCOCallBack() {
+            @Override
+            public void onSuccess(String message) {
+                MLog.i("MAIN",message);
+                String data = JsonHelper.getData(message);
+                try {
+                    JSONArray jsonArray = new JSONArray(data);
+                    for(int i=0;i<jsonArray.length();i++){
+                        JSONObject temp = (JSONObject) jsonArray.get(i);
+                        String name = temp.getString(Constants.PARAM_DEVNAME);
+                        String pw = temp.getString(Constants.PARAM_PW);
+                        String isSub = temp.getString(Constants.PARAM_SUB);
+                        String mac = temp.getString(Constants.PARAM_mac);
+                        String role = temp.getString(Constants.PARAM_ROLE);
+                        String online = temp.getString(Constants.PARAM_ONLINE);
+                        String proId = temp.getString(Constants.PARAM_DEV_ID);
+                        deviceModels.add(new DeviceModel(name,mac,pw,isSub,role,online,proId));
+                    }
+                    listenToDevices();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            @Override
+            public void onFailure(int code, String message) {
+                MLog.i("MAIN",message);
+            }
+        },token);
+    }
+
+    public void listenToDevices(){
+        List<ListenDevParFog> listenDevParFogs = new ArrayList<>();
+        miCODevice = new MiCODevice(this);
+        for(int i = 0;i < deviceModels.size(); i++){
+            ListenDevParFog listenDevParFog = new ListenDevParFog();
+            listenDevParFog.userName = myPreference.getClientID();
+            listenDevParFog.deviceid = deviceModels.get(i).getDevId();
+            listenDevParFog.host = Constants.LISTEN_HOST;
+            listenDevParFog.port = Constants.CLOUD_PORT;
+            listenDevParFog.passWord = myPreference.getPassword();
+            listenDevParFog.clientID = listenDevParFog.userName;
+            listenDevParFog.isencrypt = false;
+            listenDevParFogs.add(listenDevParFog);
+        }
+        for(int i = 0;i<listenDevParFogs.size();i++){
+            miCODevice.startListenDevice(listenDevParFogs.get(i), new ControlDeviceCallBack() {
+                @Override
+                public void onSuccess(String message) {
+                    MLog.i("main",message);
+                    ToastUtil.showToastLong(getApplicationContext(),message);
+                }
+
+                @Override
+                public void onFailure(int code, String message) {
+                    MLog.i("main",message);
+                    ToastUtil.showToastLong(getApplicationContext(),message);
+                }
+
+                @Override
+                public void onDeviceStatusReceived(int code, String messages) {
+                    MLog.i("main",messages);
+                    ToastUtil.showToastLong(getApplicationContext(),messages);
+                    int ir = JsonHelper.getIR(messages);
+                    if(ir < 3200){
+                        if(mainPageFragment != null){
+                            mainPageFragment.imageView.setImageResource(R.drawable.button_red);
+                            mainPageFragment.s3.setChecked(true);
+                            mainPageFragment.s4.setChecked(true);
+                        }
+                    }else{
+                        mainPageFragment.imageView.setImageResource(R.drawable.button_green);
+                        mainPageFragment.s3.setChecked(false);
+                        mainPageFragment.s4.setChecked(false);
+                    }
+
+                }
+            });
+        }
+    }
+
+    public void stopListen(){
+        miCODevice.stopListenDevice(new ControlDeviceCallBack() {
+            @Override
+            public void onSuccess(String message) {
+                ToastUtil.showToastShort(getApplicationContext(),R.string.peace);
+            }
+
+            @Override
+            public void onFailure(int code, String message) {
+                ToastUtil.showToastShort(getApplicationContext(),message);
+            }
+        });
     }
 
     @Override

@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.ecnu.security.Helper.Constants;
+import com.ecnu.security.Helper.MLog;
 import com.ecnu.security.MainActivity;
+import com.ecnu.security.Model.DeviceModel;
 import com.ecnu.security.Model.MicoUserExt;
 import com.ecnu.security.R;
 import com.ecnu.security.Util.MyPreference;
@@ -17,8 +19,20 @@ import com.ecnu.security.Util.ResourceUtil;
 import com.ecnu.security.Util.StringUtil;
 import com.ecnu.security.Util.ToastUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import io.fog.callbacks.ControlDeviceCallBack;
 import io.fog.callbacks.MiCOCallBack;
+import io.fog.fog2sdk.MiCODevice;
 import io.fog.fog2sdk.MiCOUser;
+import io.fog.helper.Configuration;
+import io.fog.helper.ListenDevParFog;
 import io.fog.helper.MiCO;
 
 /**
@@ -27,6 +41,9 @@ import io.fog.helper.MiCO;
 
 public class LoadingActivity extends BaseActivity{
 
+    private static String TAG = LoadingActivity.class.getSimpleName();
+
+    private List<DeviceModel> deviceModelList = new ArrayList<>();
     //UI
     private View iv_loading;
     private View rl_background;
@@ -84,7 +101,9 @@ public class LoadingActivity extends BaseActivity{
                 @Override
                 public void onSuccess(String message) {
                     String token = JsonHelper.getFogToken(message);
+                    String clientId = JsonHelper.getClientId(message);
                     myPreference.setToken(token);
+                    myPreference.setClientID(clientId);
                     getUserInfo(token);
                 }
 
@@ -104,6 +123,10 @@ public class LoadingActivity extends BaseActivity{
             @Override
             public void onSuccess(String message) {
                 String nickname = JsonHelper.getNickName(message);
+                String mode = JsonHelper.getRealname(message);
+                if(!StringUtil.isNull(mode)){
+                    myPreference.setMode(mode);
+                }
                 myPreference.setNickname(nickname);
             }
 
@@ -112,11 +135,52 @@ public class LoadingActivity extends BaseActivity{
                 ToastUtil.showToast(message);
             }
         },token);
-        goToMainActivity();
+        getDevices();
+    }
+
+    private void getDevices(){
+        String token = MyPreference.getInstance(this).getToken();
+        MiCODevice miCODevice = new MiCODevice(this);
+        miCODevice.getDeviceList(new MiCOCallBack() {
+            @Override
+            public void onSuccess(String message) {
+                MLog.i(TAG,message);
+                String data = JsonHelper.getData(message);
+                try {
+                    JSONArray jsonArray = new JSONArray(data);
+                    for(int i=0;i<jsonArray.length();i++){
+                        JSONObject temp = (JSONObject) jsonArray.get(i);
+                        String name = temp.getString(Constants.PARAM_DEVNAME);
+                        String pw = temp.getString(Constants.PARAM_PW);
+                        String isSub = temp.getString(Constants.PARAM_SUB);
+                        String mac = temp.getString(Constants.PARAM_mac);
+                        String role = temp.getString(Constants.PARAM_ROLE);
+                        String online = temp.getString(Constants.PARAM_ONLINE);
+                        String proId = temp.getString(Constants.PARAM_DEV_ID);
+                        deviceModelList.add(new DeviceModel(name,mac,pw,isSub,role,online,proId));
+                    }
+                    goToMainActivity();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            @Override
+            public void onFailure(int code, String message) {
+                MLog.i(TAG,message);
+                goToMainActivity();
+            }
+        },token);
+
     }
 
     private void goToMainActivity(){
         Intent intent = new Intent(LoadingActivity.this,MainActivity.class);
+        if(deviceModelList.size() > 0) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.PARAM_VALUE, (Serializable) deviceModelList);
+            intent.putExtras(bundle);
+        }
         startActivity(intent);
         finish();
     }

@@ -154,8 +154,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void goToMainActivity(){
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        MyPreference.getInstance(getApplicationContext()).setPassword(password);
-        //user model to pass on if there is any
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.PARAM_LOGIN,"login");
+        intent.putExtras(bundle);
         startActivity(intent);
         finish();
     }

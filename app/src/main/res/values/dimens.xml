@@ -18,6 +18,13 @@
     <dimen name="login_icon_width">120dp</dimen>
     <dimen name="login_icon_height">100dp</dimen>
 
+    <!--main page-->
+    <dimen name="action_size">200dp</dimen>
+    <dimen name="action_text">165dp</dimen>
+
+    <!--mode page-->
+    <dimen name="mode_size">120dp</dimen>
+
     <!--detail icon-->
     <dimen name="detail_icon">20dp</dimen>
 
@@ -35,5 +42,6 @@
     <!--text size-->
     <dimen name="small_text">12sp</dimen>
     <dimen name="medium_text">18sp</dimen>
+    <dimen name="twenty_text">20sp</dimen>
     <dimen name="large_text">22sp</dimen>
 </resources>

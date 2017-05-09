@@ -8,6 +8,7 @@ import com.ecnu.security.view.fragments.BaseFragment;
 import com.ecnu.security.view.fragments.ChangeDeviceNameFragment;
 import com.ecnu.security.view.fragments.ChangeNameFragment;
 import com.ecnu.security.view.fragments.DeviceEditFragment;
+import com.ecnu.security.view.fragments.ModeFragment;
 import com.ecnu.security.view.fragments.SettingFragment;
 import com.ecnu.security.view.fragments.ViewIdFragment;
 
@@ -23,6 +24,9 @@ public class FragmentFactory {
         }
         if(param.equals(Constants.FRAG_SETTING)){
             return new SettingFragment();
+        }
+        else if(param.equals(Constants.FRAG_MODE)){
+            return new ModeFragment();
         }
         else if(param.equals(Constants.PARAM_NICKNAME)){
             ChangeNameFragment changeNameFragment = new ChangeNameFragment();

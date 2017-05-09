@@ -41,6 +41,26 @@ public class MicoUserExt{
     }
 
     /**
+     * update user info
+     *
+     * @param mode
+     * @param micocb
+     */
+    public void setMode(String mode, MiCOCallBack micocb,String token) {
+        if (comfunc.checkPara(mode,token)) {
+            JSONObject postParam = new JSONObject();
+            try {
+                postParam.put("realname", mode);
+                hsp.doHttpPut(Constants.UPDATENAME(), postParam, micocb,token);
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+        } else {
+            comfunc.illegalCallBack(micocb);
+        }
+    }
+
+    /**
      * get user info
      *
      * @param micocb

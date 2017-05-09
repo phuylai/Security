@@ -71,4 +71,16 @@
     <string name="role.3">User</string>
     <string name="unbind">Unbind</string>
     <string name="confirm.unbind">Are you sure to unbind?</string>
+    <!--main page-->
+    <string name="on">开</string>
+    <string name="off">关</string>
+    <string name="on.off.system">Turn on/off system</string>
+    <string name="on.off.alert">Alert Ring</string>
+    <string name="on.off.danger">Danger Ring</string>
+    <string name="on.off.led">LED Flash</string>
+    <!--mode-->
+    <string name="peace">Peace Mode</string>
+    <string name="panic">Panic Mode</string>
+    <string name="away">Away Mode</string>
+    <string name="work">Normal Mode</string>
 </resources>

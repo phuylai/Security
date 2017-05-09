@@ -76,4 +76,9 @@ public class DetailItemMaker {
         return new DeviceHolder(context,deviceModel);
     }
 
+    public BaseViewHolder addModeHolder(ActionType actionType, ModeHolder.ModeClickListener clickListener,
+                                        boolean selected){
+        return new ModeHolder(context,actionType,clickListener,selected);
+    }
+
 }
