@@ -49,6 +49,8 @@ public class LoadingActivity extends BaseActivity{
     private View rl_background;
     private MyPreference myPreference;
 
+    private int notificationID;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         layoutId = R.layout.activity_loading;

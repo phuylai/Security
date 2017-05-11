@@ -19,6 +19,8 @@ import io.fog.helper.MiCO;
 public class SecurityApp extends Application {
     public static String TAG = SecurityApp.class.getSimpleName();
     private static SecurityApp instance;
+    private static boolean activityVisible;
+
     public static synchronized SecurityApp getInstance(){
         return instance;
     }
@@ -43,5 +45,14 @@ public class SecurityApp extends Application {
         if (languageType != null) {
             LanguageUtil.changeLanguage(context, languageType);
         }
+    }
+    public static boolean isActivityVisible(){
+        return activityVisible;
+    }
+    public static void activityResumed(){
+        activityVisible = true;
+    }
+    public static void activityPaused(){
+        activityVisible = false;
     }
 }

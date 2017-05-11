@@ -1,5 +1,6 @@
 package com.ecnu.security;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -9,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.Helper.MLog;
+import com.ecnu.security.Util.StringUtil;
 import com.ecnu.security.view.activities.LoadingActivity;
 
 /**
@@ -21,6 +23,7 @@ public class MyReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals("com.ecnu.security")){
             String msg = intent.getStringExtra(Constants.PARAM_VALUE);
+            String visible = intent.getStringExtra(Constants.VISIBLE);
             MLog.i("receiver",msg);
             Intent resultIntent = new Intent(context, LoadingActivity.class);
             PendingIntent pendingIntent =
@@ -33,9 +36,11 @@ public class MyReceiver extends BroadcastReceiver {
                                    context.getResources().getString(R.string.app_name))
                             .setContentText(msg)
                             .setTicker(msg);
-            mBuilder.setContentIntent(pendingIntent);
+            if(!StringUtil.isNull(visible)) {
+                mBuilder.setContentIntent(pendingIntent);
+            }
             mBuilder.setAutoCancel(true);
-            int mNotificationId = 10086;
+            int mNotificationId = Constants.NOTIFICATION;
             NotificationManager mNotifyMgr =
                     (NotificationManager) context
                             .getSystemService(

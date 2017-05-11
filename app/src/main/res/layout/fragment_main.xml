@@ -35,7 +35,7 @@
         android:layout_height="wrap_content">
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/sw_sys"
-            android:checked="true"
+            android:checked="false"
             android:textOff="@string/off"
             android:textOn="@string/on"
             android:textColor="@color/colorAccent"
@@ -51,7 +51,7 @@
             android:layout_toEndOf="@id/sw_sys"
             android:layout_alignParentEnd="true"/>
     </RelativeLayout>
-    <RelativeLayout
+    <!--<RelativeLayout
         android:padding="@dimen/five_dp"
         android:paddingEnd="@dimen/five_dp"
         android:background="@drawable/relativelayout_between_style"
@@ -74,7 +74,7 @@
             android:text="@string/on.off.alert"
             android:layout_toEndOf="@id/sw_alert"
             android:layout_alignParentEnd="true"/>
-    </RelativeLayout>
+    </RelativeLayout>-->
     <RelativeLayout
         android:padding="@dimen/five_dp"
         android:paddingEnd="@dimen/five_dp"

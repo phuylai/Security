@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -22,6 +24,8 @@ import com.ecnu.security.Util.ResourceUtil;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.fog.fog2sdk.MiCODevice;
+
 /**
  * Created by Phuylai on 2017/4/26.
  */
@@ -37,6 +41,7 @@ public abstract  class BaseFragment extends Fragment {
     protected BottomNavigationView bottomNavigationView;
     protected boolean backIndicator = false;
     protected boolean bottomView = true;
+    protected MiCODevice miCODevice;
 
     protected Map<String,SelectedItemCallBackListener> listenerMap = new HashMap<>();
     public interface SelectedItemCallBackListener{
@@ -49,6 +54,7 @@ public abstract  class BaseFragment extends Fragment {
         context = getActivity();
         resources = context.getResources();
         activity = (MainActivity) getActivity();
+        miCODevice = activity.getMiCODevice();
         toolbar = activity.toolbar;
         bottomNavigationView = activity.bottomNavigationView;
     }

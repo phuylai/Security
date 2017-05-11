@@ -1,7 +1,9 @@
 package com.ecnu.security;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -43,6 +45,7 @@ import io.fog.callbacks.MiCOCallBack;
 import io.fog.fog2sdk.MiCODevice;
 import io.fog.helper.Configuration;
 import io.fog.helper.ListenDevParFog;
+import io.fogcloud.fog_mqtt.service.MqttService;
 
 public class MainActivity extends BaseActivity {
 
@@ -64,8 +67,35 @@ public class MainActivity extends BaseActivity {
     protected FragmentTransaction transaction = null;
 
     private MiCODevice miCODevice;
+    private MyReceiver myReceiver = new MyReceiver();
 
     public String message = null;
+
+    private final android.os.Handler handler = new android.os.Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case Constants.DEVICE_MSG:
+                    //int ir = JsonHelper.getIR((String)msg.obj);
+                    //if(ir != 0 && ir < 3200){
+                        Intent intent = new Intent();
+                        intent.setAction("com.ecnu.security");
+                        intent.putExtra(Constants.PARAM_VALUE,"success");
+                        if(SecurityApp.isActivityVisible()){
+                            intent.putExtra(Constants.VISIBLE,"visible");
+                        }
+                        sendBroadcast(intent);
+                    //}
+                    if(mainPageFragment != null) {
+                        message = (String) msg.obj;
+                        mainPageFragment.processMessage(message);
+                    }
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    };
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -108,6 +138,10 @@ public class MainActivity extends BaseActivity {
     }
 
     private void parseArgument(){
+        miCODevice = new MiCODevice(this);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.ecnu.security");
+        registerReceiver(myReceiver,filter);
         myPreference = MyPreference.getInstance(this);
         Bundle bundle = this.getIntent().getExtras();
         if(bundle != null){
@@ -119,6 +153,12 @@ public class MainActivity extends BaseActivity {
                 listenToDevices();
             }
         }
+    }
+
+    public MiCODevice getMiCODevice(){
+        if(miCODevice == null)
+            return null;
+        return miCODevice;
     }
 
     private void getUserInfo() {
@@ -158,7 +198,6 @@ public class MainActivity extends BaseActivity {
 
     private void getDevices(){
         String token = MyPreference.getInstance(this).getToken();
-        MiCODevice miCODevice = new MiCODevice(this);
         miCODevice.getDeviceList(new MiCOCallBack() {
             @Override
             public void onSuccess(String message) {
@@ -192,7 +231,6 @@ public class MainActivity extends BaseActivity {
 
     public void listenToDevices(){
         List<ListenDevParFog> listenDevParFogs = new ArrayList<>();
-        miCODevice = new MiCODevice(this);
         for(int i = 0;i < deviceModels.size(); i++){
             ListenDevParFog listenDevParFog = new ListenDevParFog();
             listenDevParFog.userName = myPreference.getClientID();
@@ -222,19 +260,10 @@ public class MainActivity extends BaseActivity {
                 public void onDeviceStatusReceived(int code, String messages) {
                     MLog.i("main",messages);
                     ToastUtil.showToastLong(getApplicationContext(),messages);
-                    int ir = JsonHelper.getIR(messages);
-                    if(ir < 3200){
-                        if(mainPageFragment != null){
-                            mainPageFragment.imageView.setImageResource(R.drawable.button_red);
-                            mainPageFragment.s3.setChecked(true);
-                            mainPageFragment.s4.setChecked(true);
-                        }
-                    }else{
-                        mainPageFragment.imageView.setImageResource(R.drawable.button_green);
-                        mainPageFragment.s3.setChecked(false);
-                        mainPageFragment.s4.setChecked(false);
-                    }
-
+                    Message message = new Message();
+                    message.what = Constants.DEVICE_MSG;
+                    message.obj = messages;
+                    handler.sendMessage(message);
                 }
             });
         }
@@ -483,6 +512,10 @@ public class MainActivity extends BaseActivity {
         // CLEAN PASSWORD FROM SHARED PREFERENCES
         MyPreference preference = MyPreference.getInstance(this);
         preference.setPassword("");
+        preference.setToken("");
+
+        Intent intent1 = new Intent(this, MqttService.class);
+        stopService(intent1);
 
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -493,4 +526,23 @@ public class MainActivity extends BaseActivity {
         MLog.e("CMD_LOGOUT","SUCCESS");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = new Intent(this, MqttService.class);
+        startService(intent);
+        SecurityApp.activityResumed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SecurityApp.activityPaused();
+    }
 }

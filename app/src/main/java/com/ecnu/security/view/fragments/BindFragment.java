@@ -67,7 +67,6 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
     private Button btn;
     private RecyclerView recyclerView;
 
-    private MiCODevice miCODevice;
     private DeviceModel foundDevice;
     private static final int ONE_SECOND = 1000;
     private static final int MINUTE_SECOND = 60;
@@ -326,11 +325,9 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
         miCODevice.bindDevice(foundDevice.getIP(), foundDevice.getPort(), new ManageDeviceCallBack() {
             @Override
             public void onSuccess(String message) {
-                //return device ID
                 String id = JsonHelper.getDeviceId(message);
                 ToastUtil.showToastShort(activity,message);
                 listenDevice(id);
-                //getFragmentManager().popBackStack();
             }
 
             @Override
