@@ -10,7 +10,7 @@ public enum ActionType {
 
     PASSWORD("password"),PHONE("phone"),NAME("name"),DEV_LIST("dev_list"),ADD_DEV("add_dev"),
     ONLINE("online"),PEACE(Constants.MODE_PEACE),PANIC(Constants.MODE_PANIC),AWAY(Constants.MODE_AWAY),
-    WORK(Constants.MODE_WORK);
+    WORK(Constants.MODE_WORK),ALARM("alarm"),LED("led"),REDIRECT("redirect"),NOTI("noti"),TRUSTED("trusted");
 
     private final String text;
 
@@ -56,6 +56,21 @@ public enum ActionType {
         }
         if(WORK.equal(value)){
             return WORK;
+        }
+        if(ALARM.equal(value)){
+            return ALARM;
+        }
+        if(LED.equal(value)){
+            return LED;
+        }
+        if(TRUSTED.equal(value)){
+            return TRUSTED;
+        }
+        if(NOTI.equal(value)){
+            return NOTI;
+        }
+        if(REDIRECT.equal(value)){
+            return REDIRECT;
         }
         return ADD_DEV;
     }

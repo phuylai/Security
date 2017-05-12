@@ -127,6 +127,46 @@ public class MyPreference {
         return  settings.getString(Constants.PARAM_MODE,"");
     }
 
+    public void setAlarmVolume(String volume){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_ALARM,volume);
+        editor.apply();
+    }
+
+    public String getAlarmVolume(){
+        return settings.getString(Constants.PARAM_VALUE,"");
+    }
+
+    public void setLedSpeed(String speed){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_LED,speed);
+        editor.apply();
+    }
+
+    public String getLedSpeed(){
+        return settings.getString(Constants.PARAM_LED,"");
+    }
+
+    public void setNoti(String noti){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_NOTI,noti);
+        editor.apply();
+    }
+
+    public String getNoti(){
+        return settings.getString(Constants.PARAM_NOTI,"");
+    }
+
+    public void setRedirect(String redirect){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_REDIRECT,redirect);
+        editor.apply();
+    }
+
+    public String getRedirect(){
+        return settings.getString(Constants.PARAM_REDIRECT,"");
+    }
+
     public LanguageType getLanguageType() {
         String languageStr = settings.getString(Constants.PARAM_LANGUAGE,
                 null);

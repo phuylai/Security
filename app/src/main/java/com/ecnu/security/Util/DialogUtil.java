@@ -2,10 +2,17 @@ package com.ecnu.security.Util;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.widget.AppCompatSeekBar;
+import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.common.design.MaterialDialog;
+import com.ecnu.security.Helper.Constants;
+import com.ecnu.security.Model.ActionType;
 import com.ecnu.security.Model.DeviceModel;
 import com.ecnu.security.R;
 
@@ -63,6 +70,158 @@ public class DialogUtil {
 
     }
 
+    public static void showSpinnerBarDialog(Context context,final ActionType actionType,
+                                            String defValue,final DialogDataListener dialogDataListener){
+        View view = View.inflate(context,R.layout.spinner_layout,null);
+        AppCompatSpinner spinner = (AppCompatSpinner) view.findViewById(R.id.sp_redirect);
+        TextView title = (TextView) view.findViewById(R.id.tv_title);
+        final TextView value = (TextView) view.findViewById(R.id.tv_volume);
+        String text = String.format(getString(R.string.redirect_min),"5");
+        final String[] editValue = {defValue};
+        if(!StringUtil.isNull(defValue))
+            text = String.format(getString(R.string.redirect_min),defValue);
+        value.setText(text);
+        title.setText(getString(R.string.redirect));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(dialogDataListener != null)
+                    editValue[0] = adapterView.getItemAtPosition(i).toString();
+                    value.setText(String.format(getString(R.string.redirect_min),
+                            adapterView.getItemAtPosition(i).toString()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        new MaterialDialog.Builder(context)
+                .setContentView(view)
+                .setPositiveButton(getString(R.string.yes), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        if(dialogDataListener != null)
+                            dialogDataListener.yes(editValue[0],actionType);
+                        return false;
+                    }
+                })
+                .setNegativeButton(getString(R.string.back), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        if(dialogDataListener != null)
+                            dialogDataListener.no();
+                        return false;
+                    }
+                }).show();
+
+    }
+
+    public static void showSwitchBarDialog(Context context,final ActionType actionType,
+                                            String defValue,final DialogDataListener dialogDataListener){
+        View view = View.inflate(context,R.layout.switch_layout,null);
+        final SwitchCompat sw = (SwitchCompat) view.findViewById(R.id.sw_noti);
+        TextView title = (TextView) view.findViewById(R.id.tv_title);
+        final TextView value = (TextView) view.findViewById(R.id.tv_volume);
+        String text = String.format(getString(R.string.noti_on_off),getString(R.string.on));
+        if(!StringUtil.isNull(defValue))
+            text = String.format(getString(R.string.noti_on_off),defValue);
+        value.setText(text);
+        title.setText(getString(R.string.noti));
+        final String[] editValue = {defValue};
+        sw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(sw.isChecked()){
+                    editValue[0] = "on";
+                    value.setText(String.format(getString(R.string.noti_on_off),getString(R.string.on)));
+                }else{
+                    editValue[0] = "off";
+                    value.setText(String.format(getString(R.string.noti_on_off),getString(R.string.off)));
+                }
+            }
+        });
+
+        new MaterialDialog.Builder(context)
+                .setContentView(view)
+                .setPositiveButton(getString(R.string.yes), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        if(dialogDataListener != null)
+                            dialogDataListener.yes(editValue[0],actionType);
+                        return false;
+                    }
+                })
+                .setNegativeButton(getString(R.string.back), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        if(dialogDataListener != null)
+                            dialogDataListener.no();
+                        return false;
+                    }
+                }).show();
+
+    }
+
+    public static void showSeekBarDialog(Context context, final ActionType actionType,String defValue,
+                                         final DialogDataListener dialogListener){
+        View view = View.inflate(context,R.layout.seekbar_layout,null);
+        final TextView value = (TextView) view.findViewById(R.id.tv_volume);
+        TextView title = (TextView) view.findViewById(R.id.tv_title);
+        AppCompatSeekBar seekBar = (AppCompatSeekBar) view.findViewById(R.id.s1);
+        final String[] editValue = {defValue};
+        String text = String.format(getString(R.string.value),"5");
+        if(!StringUtil.isNull(text)){
+            text = String.format(getString(R.string.value),defValue);
+        }
+        value.setText(text);
+        switch (actionType){
+            case ALARM:
+                title.setText(getString(R.string.danger_volume));
+                break;
+            case LED:
+                title.setText(getString(R.string.led_speed));
+                break;
+        }
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                editValue[0] = String.valueOf(i);
+                value.setText(String.format(getString(R.string.value),i));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        new MaterialDialog.Builder(context)
+                .setContentView(view)
+                .setPositiveButton(getString(R.string.yes), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        if(dialogListener != null)
+                            dialogListener.yes(editValue[0],actionType);
+                        return false;
+                    }
+                })
+                .setNegativeButton(getString(R.string.back), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        if(dialogListener != null)
+                            dialogListener.no();
+                        return false;
+                    }
+                }).show();
+    }
+
+
     public static void showDialog(Context context, int title, int message,DialogListener dialogListener){
         final DialogListener listener = dialogListener;
         new MaterialDialog.Builder(context)
@@ -89,6 +248,11 @@ public class DialogUtil {
 
     public interface DialogListener{
         void yes();
+        void no();
+    }
+
+    public interface DialogDataListener{
+        void yes(String number,ActionType actionType);
         void no();
     }
 }

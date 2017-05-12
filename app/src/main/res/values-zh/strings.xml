@@ -82,4 +82,13 @@
     <string name="panic">警戒模式</string>
     <string name="away">离开模式</string>
     <string name="work">正常模式</string>
+    <!--setting-->
+    <string name="danger.volume">报警音量</string>
+    <string name="led.speed">LED闪烁速率</string>
+    <string name="noti">推送通知</string>
+    <string name="redirect">转发</string>
+    <string name="trusted.contact">信任联系</string>
+    <string name="value">值:%1$s</string>
+    <string name="redirect.min">%1$s 分钟后转发</string>
+
 </resources>

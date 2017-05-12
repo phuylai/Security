@@ -30,6 +30,7 @@ import com.ecnu.security.view.activities.LoginActivity;
 import com.ecnu.security.view.fragments.BaseFragment;
 import com.ecnu.security.view.fragments.MainPageFragment;
 import com.ecnu.security.view.fragments.ModeFragment;
+import com.ecnu.security.view.fragments.RegisterFragment;
 import com.ecnu.security.view.fragments.SettingFragment;
 
 import org.json.JSONArray;
@@ -68,34 +69,49 @@ public class MainActivity extends BaseActivity {
 
     private MiCODevice miCODevice;
     private MyReceiver myReceiver = new MyReceiver();
-
     public String message = null;
+    private boolean noti = true;
+
+    private int secondCount = Constants.MINUTE_SECOND;
+    private Runnable timer = null;
 
     private final android.os.Handler handler = new android.os.Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case Constants.DEVICE_MSG:
-                    //int ir = JsonHelper.getIR((String)msg.obj);
-                    //if(ir != 0 && ir < 3200){
+                    if(JsonHelper.getIR((String)msg.obj)!=0 && getNoti()) {
                         Intent intent = new Intent();
                         intent.setAction("com.ecnu.security");
-                        intent.putExtra(Constants.PARAM_VALUE,"success");
-                        if(SecurityApp.isActivityVisible()){
-                            intent.putExtra(Constants.VISIBLE,"visible");
+                        intent.putExtra(Constants.PARAM_VALUE, "success");
+                        if (SecurityApp.isActivityVisible()) {
+                            intent.putExtra(Constants.VISIBLE, "visible");
                         }
+                        countTime();
                         sendBroadcast(intent);
-                    //}
+                    }
                     if(mainPageFragment != null) {
                         message = (String) msg.obj;
-                        mainPageFragment.processMessage(message);
+                        mainPageFragment.processMessage();
                     }
+                    break;
+                case Constants.TIMER_END:
+                    //TODO: do the  transfer
+
                     break;
                 default:
                     super.handleMessage(msg);
             }
         }
     };
+
+    public void setNoti(boolean enable){
+        noti = enable;
+    }
+
+    public boolean getNoti(){
+        return noti;
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -259,7 +275,7 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onDeviceStatusReceived(int code, String messages) {
                     MLog.i("main",messages);
-                    ToastUtil.showToastLong(getApplicationContext(),messages);
+                    ToastUtil.showToastLong(getApplicationContext(), messages);
                     Message message = new Message();
                     message.what = Constants.DEVICE_MSG;
                     message.obj = messages;
@@ -544,5 +560,36 @@ public class MainActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         SecurityApp.activityPaused();
+    }
+
+
+    private class timerCounter implements Runnable {
+        @Override
+        public void run() {
+            while (true) {
+                Message message = new Message();
+                if (secondCount == 0) {
+                    message.what = Constants.TIMER_END;
+                    handler.sendMessage(message);
+                    return;
+                }
+                secondCount--;
+                try {
+                    Thread.sleep(Constants.ONE_SECOND);
+                } catch (InterruptedException e) {
+                    MLog.e(tag, e);
+                }
+            }
+        }
+    }
+
+    public void countTime() {
+        timer = new timerCounter();
+        new Thread(timer).start();
+    }
+
+    public void removeTimer(){
+        if(timer != null)
+            handler.removeCallbacks(timer);
     }
 }

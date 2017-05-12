@@ -49,6 +49,21 @@ public class DetailItemMaker {
                 ActionType.ADD_DEV,true,itemClickListener);
     }
 
+    public BaseViewHolder addRedirectHolder(){
+        return new DetailItemHolder(context,R.drawable.ic_undo,R.string.redirect,ActionType.REDIRECT,
+                true,itemClickListener);
+    }
+
+    public BaseViewHolder addTrustedHolder(){
+        return new DetailItemHolder(context,R.drawable.ic_trusted,R.string.trusted_contact,
+                ActionType.TRUSTED,true,itemClickListener);
+    }
+
+    public BaseViewHolder addNotiHolder(){
+        return new DetailItemHolder(context,R.drawable.ic_noti,R.string.noti,ActionType.NOTI,
+                true,itemClickListener);
+    }
+
     public BaseViewHolder addNameHolder(){
         return new DetailItemHolder(context,R.drawable.ic_electrical_sensor,R.string.device_name,
                 ActionType.NAME,true,itemClickListener);
@@ -57,6 +72,16 @@ public class DetailItemMaker {
     public BaseViewHolder addIdHolder(){
         return new DetailItemHolder(context,R.drawable.ic_electrical_sensor,R.string.device_id,
                 ActionType.PHONE,true,itemClickListener);
+    }
+
+    public BaseViewHolder addAlarmVoulume(){
+        return new DetailItemHolder(context,R.drawable.ic_electrical_sensor,R.string.danger_volume,
+                ActionType.PASSWORD,true,itemClickListener);
+    }
+
+    public BaseViewHolder addLedSpeed(){
+        return new DetailItemHolder(context,R.drawable.ic_electrical_sensor,R.string.led_speed,
+                ActionType.DEV_LIST,true,itemClickListener);
     }
 
     public BaseViewHolder addUnbindHolder(){

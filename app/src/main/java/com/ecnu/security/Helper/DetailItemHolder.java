@@ -30,6 +30,9 @@ public class DetailItemHolder extends BaseViewHolder implements Cloneable{
         void phoneClick();
         void deviceListClick();
         void addDeviceClick();
+        void notiClick();
+        void redirectClick();
+        void trustedContactClick();
     }
 
     public DetailItemHolder(Context context, int iconImageId, int actionStringId,
@@ -54,6 +57,9 @@ public class DetailItemHolder extends BaseViewHolder implements Cloneable{
                 case NAME:
                 case DEV_LIST:
                 case ADD_DEV:
+                case REDIRECT:
+                case TRUSTED:
+                case NOTI:
                     tv_name.setTextColor(context.getResources().getColor(R.color.text_grey));
                     break;
             }
@@ -89,6 +95,21 @@ public class DetailItemHolder extends BaseViewHolder implements Cloneable{
             itemClickListener.addDeviceClick();
     }
 
+    public void redirect(){
+        if(itemClickListener != null)
+            itemClickListener.redirectClick();
+    }
+
+    public void notificationClick(){
+        if(itemClickListener != null)
+            itemClickListener.notiClick();
+    }
+
+    public void trustedClick(){
+        if(itemClickListener != null)
+            itemClickListener.trustedContactClick();
+    }
+
 
     @Override
     public int getLayoutId() {
@@ -121,6 +142,15 @@ public class DetailItemHolder extends BaseViewHolder implements Cloneable{
                 break;
             case ADD_DEV:
                 addNewDevice();
+                break;
+            case REDIRECT:
+                redirect();
+                break;
+            case TRUSTED:
+                trustedClick();
+                break;
+            case NOTI:
+                notificationClick();
                 break;
         }
     }

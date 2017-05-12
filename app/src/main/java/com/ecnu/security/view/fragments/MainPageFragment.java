@@ -78,14 +78,11 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
         sos = (Button) rootView.findViewById(R.id.bt_sos);
     }
 
-    public void processMessage(String msg) {
-        //int ir = JsonHelper.getIR(msg);
-        //if(ir != 0 && ir < 3200){
-            imageView.setImageResource(R.drawable.button_red);
-            s1.setChecked(true);
-            s3.setChecked(true);
-            s4.setChecked(true);
-        //}
+    public void processMessage() {
+        imageView.setImageResource(R.drawable.button_red);
+        s1.setChecked(true);
+        s3.setChecked(true);
+        s4.setChecked(true);
     }
 
     @Override

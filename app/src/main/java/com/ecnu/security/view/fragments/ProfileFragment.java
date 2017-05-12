@@ -19,6 +19,7 @@ import com.ecnu.security.Helper.DetailItemMaker;
 import com.ecnu.security.Helper.UserHeaderHolder;
 import com.ecnu.security.Model.ActionType;
 import com.ecnu.security.R;
+import com.ecnu.security.Util.DialogUtil;
 import com.ecnu.security.Util.MyPreference;
 import com.ecnu.security.Util.ResourceUtil;
 import com.ecnu.security.view.activities.LoginActivity;
@@ -33,7 +34,7 @@ import static com.ecnu.security.Util.ResourceUtil.setMarginTop;
  * Created by Phuylai on 2017/5/3.
  */
 
-public class ProfileFragment extends BaseFragment implements DetailItemHolder.ItemClickListener, ButtonHolder.LogoutListener {
+public class ProfileFragment extends BaseFragment implements DetailItemHolder.ItemClickListener, ButtonHolder.LogoutListener, DialogUtil.DialogDataListener {
 
     private ProgressBar progressBar;
     private Collection<BaseViewHolder> baseViewHolders = new ArrayList<>();
@@ -127,6 +128,9 @@ public class ProfileFragment extends BaseFragment implements DetailItemHolder.It
         detailItemHolders.add(detailItemMaker.nameHolder());
         detailItemHolders.add(detailItemMaker.deviceHolder());
         detailItemHolders.add(detailItemMaker.addDevHolder());
+        detailItemHolders.add(detailItemMaker.addRedirectHolder());
+        detailItemHolders.add(detailItemMaker.addTrustedHolder());
+        detailItemHolders.add(detailItemMaker.addNotiHolder());
         detailItemHolders.add(detailItemMaker.addButton(this));
         addToBody(detailItemHolders);
 
@@ -189,5 +193,30 @@ public class ProfileFragment extends BaseFragment implements DetailItemHolder.It
         super.onResume();
         activity.hideKeyBoard();
         setView();
+    }
+
+    @Override
+    public void notiClick() {
+        DialogUtil.showSwitchBarDialog(activity,ActionType.NOTI,myPreference.getNoti(),this);
+    }
+
+    @Override
+    public void redirectClick() {
+        DialogUtil.showSpinnerBarDialog(activity,ActionType.REDIRECT,myPreference.getRedirect(),this);
+    }
+
+    @Override
+    public void trustedContactClick() {
+
+    }
+
+    @Override
+    public void yes(String number, ActionType actionType) {
+
+    }
+
+    @Override
+    public void no() {
+
     }
 }

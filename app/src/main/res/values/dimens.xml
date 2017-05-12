@@ -28,6 +28,9 @@
     <!--detail icon-->
     <dimen name="detail_icon">20dp</dimen>
 
+    <!--seekbar-->
+    <dimen name="seekbar">200dp</dimen>
+
     <dimen name="zero">0dp</dimen>
     <dimen name="three_dp">3dp</dimen>
     <dimen name="five_dp">5dp</dimen>

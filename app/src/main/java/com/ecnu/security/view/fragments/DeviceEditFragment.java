@@ -13,6 +13,7 @@ import com.ecnu.security.Helper.BaseViewHolder;
 import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.Helper.DetailItemHolder;
 import com.ecnu.security.Helper.DetailItemMaker;
+import com.ecnu.security.Helper.MLog;
 import com.ecnu.security.Model.ActionType;
 import com.ecnu.security.Model.DeviceModel;
 import com.ecnu.security.R;
@@ -25,22 +26,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import io.fog.callbacks.ControlDeviceCallBack;
 import io.fog.callbacks.ManageDeviceCallBack;
 import io.fog.fog2sdk.MiCODevice;
+import io.fog.helper.CommandPara;
 
 /**
  * Created by Phuylai on 2017/5/5.
  */
 
-public class DeviceEditFragment extends BaseFragment implements DetailItemHolder.ItemClickListener, DialogUtil.DialogListener, BaseFragment.SelectedItemCallBackListener {
+public class DeviceEditFragment extends BaseFragment implements DetailItemHolder.ItemClickListener, DialogUtil.DialogListener, BaseFragment.SelectedItemCallBackListener, DialogUtil.DialogDataListener {
 
     private Collection<BaseViewHolder> baseViewHolders = new ArrayList<>();
     private LinearLayout bodyView;
     private List<BaseViewHolder> detailItemHolders = new ArrayList<>();
-    private MyPreference myPreference;
     private DeviceModel deviceModel;
 
     private ProgressBar progressBar;
+
+    private MyPreference myPreference;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +87,7 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
 
     @Override
     protected void findViews(View rootView) {
+        myPreference = MyPreference.getInstance(activity);
         bodyView = (LinearLayout) rootView.findViewById(R.id.ll_details_view);
         progressBar = (ProgressBar) rootView.findViewById(R.id.pb_sending_post);
         setView();
@@ -110,6 +115,8 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
                 getDimenPx(activity,R.dimen.ten_dp));
         detailItemHolders.add(detailItemMaker.addNameHolder());
         detailItemHolders.add(detailItemMaker.addIdHolder());
+        detailItemHolders.add(detailItemMaker.addAlarmVoulume());
+        detailItemHolders.add(detailItemMaker.addLedSpeed());
         detailItemHolders.add(detailItemMaker.addUnbindHolder());
         addToBody(detailItemHolders);
     }
@@ -135,7 +142,7 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
 
     @Override
     public void psdClick() {
-
+        DialogUtil.showSeekBarDialog(activity,ActionType.ALARM,myPreference.getAlarmVolume(),this);
     }
 
     @Override
@@ -154,7 +161,7 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
 
     @Override
     public void deviceListClick() {
-
+        DialogUtil.showSeekBarDialog(activity,ActionType.LED,myPreference.getLedSpeed(),this);
     }
 
     @Override
@@ -183,8 +190,45 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
     }
 
     @Override
+    public void yes(String number,ActionType actionType) {
+        switch (actionType){
+            case ALARM:
+                myPreference.setAlarmVolume(number);
+                String commandJson = "{\"alarm_volume\":"+number+"\"}";
+                sendCommand(commandJson);
+                break;
+            case LED:
+                myPreference.setLedSpeed(number);
+                String command = "{\"led_speed\":"+number+"\"}";
+                sendCommand(command);
+                break;
+        }
+    }
+
+    @Override
     public void no() {
 
+    }
+
+    private void sendCommand(String jsonString){
+        progressBar.setVisibility(View.VISIBLE);
+        CommandPara commandPara = new CommandPara();
+        //TODO:
+        //commandPara.deviceid = deviceid is sent by the device
+        //commandPara.devicepw = deviceid is mapped to get name n pw
+        commandPara.command = jsonString;
+        miCODevice.sendCommand(commandPara, new ControlDeviceCallBack() {
+            @Override
+            public void onSuccess(String message) {
+                progressBar.setVisibility(View.GONE);
+                MLog.i("send command",message);
+            }
+            @Override
+            public void onFailure(int code, String message) {
+                progressBar.setVisibility(View.GONE);
+                MLog.i("send command",message);
+            }
+        },myPreference.getToken());
     }
 
     @Override
@@ -192,5 +236,20 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
         String newName = (String) selectedItem;
         deviceModel.setName(newName);
         setView();
+    }
+
+    @Override
+    public void notiClick() {
+
+    }
+
+    @Override
+    public void redirectClick() {
+
+    }
+
+    @Override
+    public void trustedContactClick() {
+
     }
 }

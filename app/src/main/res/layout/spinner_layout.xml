@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/medium_text"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center_horizontal"/>
+    <android.support.v7.widget.AppCompatSpinner
+        android:layout_marginTop="@dimen/twenty_dp"
+        android:id="@+id/sp_redirect"
+        android:layout_marginLeft="@dimen/ten_dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="@dimen/login_icon_width"
+        android:layout_height="wrap_content"
+        android:entries="@array/redirect">
+    </android.support.v7.widget.AppCompatSpinner>
+    <TextView
+        android:id="@+id/tv_volume"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/item_detail_style"
+        android:text="@string/redirect.min"
+        android:layout_gravity="center_horizontal"
+        />
+
+</LinearLayout>

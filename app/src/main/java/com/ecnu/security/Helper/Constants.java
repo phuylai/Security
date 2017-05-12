@@ -58,6 +58,9 @@ public class Constants {
     public static final int TIMER_END = -6;
     public static final int DEVICE_MSG = -7;
     public static final int NOTIFICATION = -8;
+    public static final int ONE_SECOND = 1000;
+    public static final int MINUTE_SECOND = 60;
+    public static final int THREE_MIN = 180;
 
     //user
     public final static String PARAM_USERNAME = "username";
@@ -121,6 +124,10 @@ public class Constants {
     public static final String PARAM_DEV_ID = "device_id";
     public static final String PARAM_ROLE = "role";
     public static final String PARAM_DEVICE_ID = "deviceid";
+    public static final String PARAM_ALARM = "alarm";
+    public static final String PARAM_LED = "led";
+    public static final String PARAM_NOTI = "noti";
+    public static final String PARAM_REDIRECT = "redirect";
 
     //login
     public static final String PARAM_LOGIN = "PARAM_LOGIN";

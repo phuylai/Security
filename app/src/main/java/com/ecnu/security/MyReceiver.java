@@ -22,6 +22,7 @@ public class MyReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals("com.ecnu.security")){
+            ((MainActivity) context).removeTimer();
             String msg = intent.getStringExtra(Constants.PARAM_VALUE);
             String visible = intent.getStringExtra(Constants.VISIBLE);
             MLog.i("receiver",msg);

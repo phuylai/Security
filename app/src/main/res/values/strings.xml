@@ -72,8 +72,8 @@
     <string name="unbind">Unbind</string>
     <string name="confirm.unbind">Are you sure to unbind?</string>
     <!--main page-->
-    <string name="on">开</string>
-    <string name="off">关</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
     <string name="on.off.system">Turn on/off Alarm</string>
     <string name="on.off.alert">Alert Ring</string>
     <string name="on.off.danger">Danger Ring</string>
@@ -83,4 +83,13 @@
     <string name="panic">Panic Mode</string>
     <string name="away">Away Mode</string>
     <string name="work">Normal Mode</string>
+    <!--setting-->
+    <string name="danger.volume">Alarm Volume</string>
+    <string name="led.speed">LED Speed</string>
+    <string name="noti">Notification</string>
+    <string name="redirect">Redirect</string>
+    <string name="trusted.contact">Trusted Contact</string>
+    <string name="value">Value:%1$s</string>
+    <string name="redirect.min">Redirect after %1$s minutes</string>
+    <string name="noti.on.off">Notification: %1$s</string>
 </resources>
