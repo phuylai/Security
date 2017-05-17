@@ -11,6 +11,7 @@ import android.view.View;
 import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.Helper.MLog;
 import com.ecnu.security.MainActivity;
+import com.ecnu.security.Model.AlertDevice;
 import com.ecnu.security.Model.DeviceModel;
 import com.ecnu.security.Model.MicoUserExt;
 import com.ecnu.security.R;
@@ -49,12 +50,22 @@ public class LoadingActivity extends BaseActivity{
     private View rl_background;
     private MyPreference myPreference;
 
-    private int notificationID;
+    private AlertDevice alertDevice;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         layoutId = R.layout.activity_loading;
         super.onCreate(savedInstanceState);
+        onNewIntent(getIntent());
+    }
+
+    protected void onNewIntent(Intent intent){
+        if(intent == null)
+            return;
+        Bundle bundle = intent.getExtras();
+        if(bundle == null)
+            return;
+        alertDevice = (AlertDevice) bundle.getSerializable(Constants.PARAM_VALUE);
     }
 
     @Override
@@ -181,6 +192,7 @@ public class LoadingActivity extends BaseActivity{
         if(deviceModelList.size() > 0) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Constants.PARAM_VALUE, (Serializable) deviceModelList);
+            bundle.putSerializable(Constants.NOTI_TYPE,alertDevice);
             intent.putExtras(bundle);
         }
         startActivity(intent);

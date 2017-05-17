@@ -35,6 +35,14 @@ public class Constants {
         return _URLHEAD() + "getUserInfo/";
     }
 
+    //SMS
+    public static final String _SID = "700468f7af3b4d708cd9dc60da64d617";
+    public static final String _SMSURL = "20150822/affMarkSMS/sendSMS";
+    public static final String _HEADER = "Content-type:application/x-www-form-urlencoded;charset=UTF-8";
+    public static final String _TOKEN = "c3518f1ca06f446d8c4c5490ee1cf04e";
+    public static final String RESP_DATA_TYPE = "json";
+    public static final String _BASEURL = "https://api.miaodiyun.com/";
+
     //debug true or false
     public static final boolean DEBUG_ENABLE = true;
 
@@ -56,8 +64,10 @@ public class Constants {
     public static final int ERROR_INDEX = -1;
     public static final int SECOND_TICK = -5;
     public static final int TIMER_END = -6;
-    public static final int DEVICE_MSG = -7;
+    public static final int DEVICE_SUBSCRIBE = 4214;
+    public static final int DEVICE_STATUS = 4200;
     public static final int NOTIFICATION = -8;
+    public static final int  PARAM_UPDATE = -9;
     public static final int ONE_SECOND = 1000;
     public static final int MINUTE_SECOND = 60;
     public static final int THREE_MIN = 180;
@@ -75,6 +85,8 @@ public class Constants {
     public final static String PARAM_PAYLOAD = "payload";
     public final static String PARAM_DEVICEINFO = "device_info";
     public final static String PARAM_IR = "infrared_reflective";
+    public final static String PARAM_NOTE = "note";
+
 
     //Language
     public static final String PARAM_LANGUAGE = "language";
@@ -99,6 +111,7 @@ public class Constants {
     public static final String FRAG_SETTING = "Setting";
     public static final String FRAG_DETAIL = "Detail";
     public static final String FRAG_MODE = "mode";
+    public static final String FRAG_PROFILE = "Profile";
 
     //Bunlde
     public static final String PARAM_VALUE = "value";
@@ -128,6 +141,11 @@ public class Constants {
     public static final String PARAM_LED = "led";
     public static final String PARAM_NOTI = "noti";
     public static final String PARAM_REDIRECT = "redirect";
+    public static final String ALERT_ID = "product_ID";
+    public static final String MODULE = "module";
+    public static final String INFRARED_SENSOR = "InfraredSensor";
+    public static final String SMOKE_SENSOR = "SmokeSensor";
+    public static final String NOTI_TYPE = "NOTI_TYPE";
 
     //login
     public static final String PARAM_LOGIN = "PARAM_LOGIN";

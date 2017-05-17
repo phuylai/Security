@@ -1,6 +1,7 @@
 package com.ecnu.security.view.activities;
 
 import com.ecnu.security.Helper.Constants;
+import com.ecnu.security.Model.AlertDevice;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +44,21 @@ public class JsonHelper {
                 JSONObject info = new JSONObject(data);
                 String nickname = info.getString(Constants.PARAM_NICKNAME);
                 return nickname;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getNote(String message) {
+        try {
+            JSONObject object = new JSONObject(message);
+            if(object.has(Constants.PARAM_DATA)){
+                String data = object.getString(Constants.PARAM_DATA);
+                JSONObject info = new JSONObject(data);
+                String note = info.getString(Constants.PARAM_NOTE);
+                return note;
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -95,6 +111,28 @@ public class JsonHelper {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public static AlertDevice getAlertDevice(String message){
+        AlertDevice alertDevice = new AlertDevice();
+        JSONObject object = null;
+        try {
+            object = new JSONObject(message);
+            if(object.has(Constants.PARAM_PAYLOAD)){
+                String data = object.getString(Constants.PARAM_PAYLOAD);
+                JSONObject info = new JSONObject(data);
+                String deviceinfo = info.getString(Constants.PARAM_DEVICEINFO);
+                JSONObject device = new JSONObject(deviceinfo);
+                String id = device.getString(Constants.ALERT_ID);
+                String module = info.getString(Constants.MODULE);
+                alertDevice.setDevice_id(id);
+                alertDevice.setModule(module);
+                return alertDevice;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static String getData(String message) {

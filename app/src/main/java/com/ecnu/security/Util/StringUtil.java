@@ -5,6 +5,15 @@ import android.graphics.Typeface;
 import android.text.method.PasswordTransformationMethod;
 import android.widget.EditText;
 
+import com.ecnu.security.Helper.MLog;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -217,6 +226,85 @@ public class StringUtil {
 
     public static boolean matchREGEX(Pattern pattern, String matchString) {
         return pattern.matcher(matchString).matches();
+    }
+
+    public static String timeStamp(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        return sdf.format(new Date());
+    }
+
+    public static String getMd5(String plainText) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(plainText.getBytes());
+            byte b[] = md.digest();
+
+            int i;
+
+            StringBuffer buf = new StringBuffer("");
+            for (int offset = 0; offset < b.length; offset++) {
+                i = b[offset];
+                if (i < 0)
+                    i += 256;
+                if (i < 16)
+                    buf.append("0");
+                buf.append(Integer.toHexString(i));
+            }
+            //32位加密
+            return buf.toString();
+            // 16位的加密
+            //return buf.toString().substring(8, 24);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public static String post(String url, String body)
+    {
+        //MLog.i("url" , System.lineSeparator() + url);
+        //MLog.i("body:" , System.lineSeparator() + body);
+
+        String result = "";
+        try
+        {
+            OutputStreamWriter out = null;
+            BufferedReader in = null;
+            URL realUrl = new URL(url);
+            URLConnection conn = realUrl.openConnection();
+
+            // 璁剧疆杩炴帴鍙傛暟
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(20000);
+
+            // 鎻愪氦鏁版嵁
+            out = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
+            out.write(body);
+            out.flush();
+
+            // 璇诲彇杩斿洖鏁版嵁
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            String line = "";
+            boolean firstLine = true; // 璇荤涓 琛屼笉鍔犳崲琛岀
+            while ((line = in.readLine()) != null)
+            {
+                if (firstLine)
+                {
+                    firstLine = false;
+                } else
+                {
+                    result += System.lineSeparator();
+                }
+                result += line;
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }

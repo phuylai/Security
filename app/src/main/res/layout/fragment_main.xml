@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:fontFamily="sans-serif-condensed"
+            android:gravity="center_horizontal"
             android:textSize="@dimen/twenty_text"
             android:textColor="@color/colorWhite"
             />

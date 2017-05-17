@@ -7,7 +7,7 @@
 
     <TextView  android:layout_gravity="center_horizontal"
         android:text="@string/device.info"
-        android:textSize="@dimen/medium_text"
+        android:textSize="@dimen/large_text"
         android:fontFamily="sans-serif-condensed"
         android:textColor="@color/colorPrimary"
         android:gravity="center_horizontal"/>

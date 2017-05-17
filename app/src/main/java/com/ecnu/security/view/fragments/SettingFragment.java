@@ -92,11 +92,11 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
         switch (view.getId()){
             case R.id.sw_noti:
                 //switch on off the noti
-                if(sw.isChecked()){
+                /*if(sw.isChecked()){
                     activity.setNoti(true);
                 }else{
                     activity.setNoti(false);
-                }
+                }*/
                 break;
             case R.id.rl_trusted:
                 //go to add/edit trusted contact

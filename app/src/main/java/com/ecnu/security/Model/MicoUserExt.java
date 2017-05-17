@@ -61,6 +61,26 @@ public class MicoUserExt{
     }
 
     /**
+     * update user info
+     *
+     * @param note
+     * @param micocb
+     */
+    public void setNote(String note, MiCOCallBack micocb,String token) {
+        if (comfunc.checkPara(note,token)) {
+            JSONObject postParam = new JSONObject();
+            try {
+                postParam.put("note",note);
+                hsp.doHttpPut(Constants.UPDATENAME(), postParam, micocb,token);
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+        } else {
+            comfunc.illegalCallBack(micocb);
+        }
+    }
+
+    /**
      * get user info
      *
      * @param micocb

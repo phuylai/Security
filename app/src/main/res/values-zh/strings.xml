@@ -90,5 +90,9 @@
     <string name="trusted.contact">信任联系</string>
     <string name="value">值:%1$s</string>
     <string name="redirect.min">%1$s 分钟后转发</string>
+    <string name="add.contact">新添加</string>
+    <string name="add">添加</string>
+    <string name="fail.empty">填写好名称和手机号码</string>
+    <string name="delete">删除</string>
 
 </resources>

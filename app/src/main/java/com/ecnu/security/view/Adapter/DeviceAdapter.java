@@ -68,9 +68,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
 
     @Override
     public long getItemId(int position) {
-        if(deviceModels == null)
-            return 0;
-        return deviceModels.size();
+       return position;
     }
 
     @Override

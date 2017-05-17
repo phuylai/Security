@@ -183,8 +183,22 @@ public class ModeFragment extends BaseFragment implements ModeHolder.ModeClickLi
 
     private void stopListenToDevice(final String value){
         progressBar.setVisibility(View.VISIBLE);
-        activity.stopListen();
+        stopListen();
         updateUserInfo(value);
+    }
+
+    public void stopListen(){
+        miCODevice.stopListenDevice(new ControlDeviceCallBack() {
+            @Override
+            public void onSuccess(String message) {
+                ToastUtil.showToastShort(activity,R.string.peace);
+            }
+
+            @Override
+            public void onFailure(int code, String message) {
+                ToastUtil.showToastShort(activity,message);
+            }
+        });
     }
 
     private void updateUserInfo(final String value){

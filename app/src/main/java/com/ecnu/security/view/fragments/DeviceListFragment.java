@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.fog.callbacks.MiCOCallBack;
 import io.fog.fog2sdk.MiCODevice;
@@ -51,9 +52,9 @@ public class DeviceListFragment extends BaseFragment implements DeviceAdapter.De
     // refresh
     protected Handler mUiHandler = new Handler();
     protected long DELAYMILLIS = 200;
-    protected List<DeviceModel> models = new ArrayList<>();
+    protected List<Object> models = new ArrayList<>();
 
-    private RecyclerView recyclerView;
+    protected RecyclerView recyclerView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -168,5 +169,6 @@ public class DeviceListFragment extends BaseFragment implements DeviceAdapter.De
     public void no() {
 
     }
+
 
 }

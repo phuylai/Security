@@ -147,14 +147,14 @@ public class MyPreference {
         return settings.getString(Constants.PARAM_LED,"");
     }
 
-    public void setNoti(String noti){
+    public void setNoti(boolean enable){
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString(Constants.PARAM_NOTI,noti);
+        editor.putBoolean(Constants.PARAM_NOTI,enable);
         editor.apply();
     }
 
-    public String getNoti(){
-        return settings.getString(Constants.PARAM_NOTI,"");
+    public boolean getNoti(){
+        return settings.getBoolean(Constants.PARAM_NOTI,true);
     }
 
     public void setRedirect(String redirect){

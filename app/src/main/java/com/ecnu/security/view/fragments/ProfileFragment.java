@@ -47,8 +47,7 @@ public class ProfileFragment extends BaseFragment implements DetailItemHolder.It
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        backIndicator = true;
-        bottomView = false;
+        backIndicator = false;
         myPreference = MyPreference.getInstance(activity);
     }
 
@@ -197,7 +196,13 @@ public class ProfileFragment extends BaseFragment implements DetailItemHolder.It
 
     @Override
     public void notiClick() {
-        DialogUtil.showSwitchBarDialog(activity,ActionType.NOTI,myPreference.getNoti(),this);
+        String def = "";
+        if(myPreference.getNoti()){
+            def = getString(R.string.on);
+        }else{
+            def = getString(R.string.off);
+        }
+        DialogUtil.showSwitchBarDialog(activity,ActionType.NOTI,def,this);
     }
 
     @Override
@@ -207,12 +212,20 @@ public class ProfileFragment extends BaseFragment implements DetailItemHolder.It
 
     @Override
     public void trustedContactClick() {
-
+        activity.goToFragment(new ContactListFragment());
     }
 
     @Override
     public void yes(String number, ActionType actionType) {
-
+        switch (actionType){
+            case NOTI:
+                if(number.equals("on")) {
+                    myPreference.setNoti(true);
+                }else if(number.equals("off")){
+                    myPreference.setNoti(false);
+                }
+                break;
+        }
     }
 
     @Override

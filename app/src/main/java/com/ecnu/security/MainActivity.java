@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import com.ecnu.security.Controller.FragmentFactory;
 import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.Helper.MLog;
 import com.ecnu.security.Model.ActionType;
+import com.ecnu.security.Model.AlertDevice;
 import com.ecnu.security.Model.DeviceModel;
 import com.ecnu.security.Model.MicoUserExt;
 import com.ecnu.security.Util.MyPreference;
@@ -30,6 +32,7 @@ import com.ecnu.security.view.activities.LoginActivity;
 import com.ecnu.security.view.fragments.BaseFragment;
 import com.ecnu.security.view.fragments.MainPageFragment;
 import com.ecnu.security.view.fragments.ModeFragment;
+import com.ecnu.security.view.fragments.ProfileFragment;
 import com.ecnu.security.view.fragments.RegisterFragment;
 import com.ecnu.security.view.fragments.SettingFragment;
 
@@ -53,7 +56,7 @@ public class MainActivity extends BaseActivity {
     public static final String tag = MainActivity.class.getSimpleName();
     //TODO: model to load in
 
-    public List<DeviceModel> deviceModels = new ArrayList<>();
+    private List<DeviceModel> deviceModels = new ArrayList<>();
     private MyPreference myPreference;
 
     public Toolbar toolbar = null;
@@ -61,7 +64,7 @@ public class MainActivity extends BaseActivity {
 
     protected BaseFragment currentFragment = null;
     private MainPageFragment mainPageFragment;
-    private SettingFragment settingFragment;
+    private ProfileFragment profileFragment;
     private ModeFragment modeFragment;
     protected FragmentManager fragmentManager = null;
     private List<BaseFragment> topFragments = new ArrayList<>();
@@ -69,8 +72,9 @@ public class MainActivity extends BaseActivity {
 
     private MiCODevice miCODevice;
     private MyReceiver myReceiver = new MyReceiver();
-    public String message = null;
+    private String message = null;
     private boolean noti = true;
+    private AlertDevice alert;
 
     private int secondCount = Constants.MINUTE_SECOND;
     private Runnable timer = null;
@@ -79,20 +83,27 @@ public class MainActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case Constants.DEVICE_MSG:
-                    if(JsonHelper.getIR((String)msg.obj)!=0 && getNoti()) {
+                case Constants.DEVICE_SUBSCRIBE:
+                    break;
+                case Constants.DEVICE_STATUS:
+                    message = (String) msg.obj;
+                    alert = JsonHelper.getAlertDevice(message);
+                    if(getNoti()) {
                         Intent intent = new Intent();
                         intent.setAction("com.ecnu.security");
-                        intent.putExtra(Constants.PARAM_VALUE, "success");
+                        message = (String) msg.obj;
+                        intent.putExtra(Constants.PARAM_VALUE,alert);
+                        //intent.putExtra(Constants.PARAM_VALUE, alertDevice.getModule());
                         if (SecurityApp.isActivityVisible()) {
-                            intent.putExtra(Constants.VISIBLE, "visible");
+                            intent.putExtra(Constants.VISIBLE, "true");
+                        }else{
+                            intent.putExtra(Constants.VISIBLE,"false");
                         }
                         countTime();
                         sendBroadcast(intent);
                     }
-                    if(mainPageFragment != null) {
-                        message = (String) msg.obj;
-                        mainPageFragment.processMessage();
+                    if(mainPageFragment != null && SecurityApp.isActivityVisible()) {
+                        mainPageFragment.processMessage(alert);
                     }
                     break;
                 case Constants.TIMER_END:
@@ -105,12 +116,12 @@ public class MainActivity extends BaseActivity {
         }
     };
 
-    public void setNoti(boolean enable){
-        noti = enable;
+    public void setAlertNull(){
+        alert = null;
     }
 
     public boolean getNoti(){
-        return noti;
+        return  MyPreference.getInstance(this).getNoti();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -132,12 +143,12 @@ public class MainActivity extends BaseActivity {
                         return true;
                     }
                 case R.id.navigation_setting:
-                    if(currentFragment != null && currentFragment == settingFragment){
+                    if(currentFragment != null && currentFragment == profileFragment){
                         return true;
                     }else {
-                        settingFragment = (SettingFragment) FragmentFactory.getFragment(Constants.
-                                FRAG_SETTING,null,null);
-                        goToFragment(settingFragment);
+                        profileFragment = (ProfileFragment) FragmentFactory.getFragment(Constants.
+                                FRAG_PROFILE,null,null);
+                        goToFragment(profileFragment);
                         return true;
                     }
             }
@@ -150,7 +161,35 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         layoutId = R.layout.activity_main;
         super.onCreate(savedInstanceState);
+        checkState(savedInstanceState);
         parseArgument();
+    }
+
+    private void checkState(Bundle bundle){
+        if(bundle == null)
+            return;
+        alert = (AlertDevice) bundle.getSerializable(Constants.NOTI_TYPE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(Constants.NOTI_TYPE,alert);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        alert = (AlertDevice) savedInstanceState.getSerializable(Constants.NOTI_TYPE);
+    }
+
+    protected void onNewIntent(Intent intent){
+        if(intent == null)
+            return;
+        Bundle bundle = intent.getExtras();
+        if(bundle == null)
+            return;
+        alert = (AlertDevice) bundle.getSerializable(Constants.NOTI_TYPE);
     }
 
     private void parseArgument(){
@@ -277,26 +316,12 @@ public class MainActivity extends BaseActivity {
                     MLog.i("main",messages);
                     ToastUtil.showToastLong(getApplicationContext(), messages);
                     Message message = new Message();
-                    message.what = Constants.DEVICE_MSG;
+                    message.what = code;
                     message.obj = messages;
                     handler.sendMessage(message);
                 }
             });
         }
-    }
-
-    public void stopListen(){
-        miCODevice.stopListenDevice(new ControlDeviceCallBack() {
-            @Override
-            public void onSuccess(String message) {
-                ToastUtil.showToastShort(getApplicationContext(),R.string.peace);
-            }
-
-            @Override
-            public void onFailure(int code, String message) {
-                ToastUtil.showToastShort(getApplicationContext(),message);
-            }
-        });
     }
 
     @Override
@@ -308,6 +333,7 @@ public class MainActivity extends BaseActivity {
     }
 
     protected void initFragment(){
+        onNewIntent(getIntent());
         goToMainPageFragment();
     }
 
@@ -338,6 +364,11 @@ public class MainActivity extends BaseActivity {
             return;
         }
         mainPageFragment = new MainPageFragment();
+        if(alert != null){
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.NOTI_TYPE,alert);
+            mainPageFragment.setArguments(bundle);
+        }
         skipToFragmentByContentId(mainPageFragment,R.id.content,false, Constants.POP_TO_HOME,0,0);
     }
 
@@ -591,5 +622,9 @@ public class MainActivity extends BaseActivity {
     public void removeTimer(){
         if(timer != null)
             handler.removeCallbacks(timer);
+    }
+
+    public List<DeviceModel> getDeviceModels(){
+        return deviceModels;
     }
 }

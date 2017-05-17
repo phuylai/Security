@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import com.common.design.MaterialDialog;
 import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.Model.ActionType;
 import com.ecnu.security.Model.DeviceModel;
+import com.ecnu.security.Model.TrustedContact;
 import com.ecnu.security.R;
 
 import static com.ecnu.security.Util.ResourceUtil.getString;
@@ -68,6 +70,81 @@ public class DialogUtil {
                     }
                 }).show();
 
+    }
+
+    public static void addContactDialog(final Context context, final DialogContactListener listener){
+        View view = View.inflate(context,R.layout.add_contact_layout,null);
+        final EditText et_name = (EditText) view.findViewById(R.id.et_name);
+        final EditText et_phone = (EditText) view.findViewById(R.id.et_phone);
+        final String[] name = {null} ;
+        final String[] phone = {null};
+        new MaterialDialog.Builder(context)
+                .setContentView(view)
+                .setPositiveButton(getString(R.string.add), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        name[0] = et_name.getText().toString().trim();
+                        phone[0] = et_phone.getText().toString().trim();
+                        if(StringUtil.isNull(name[0]) || StringUtil.isNull(phone[0])){
+                            ToastUtil.showToastShort(context,R.string.fail_empty);
+                            return false;
+                        }
+                        if( listener != null)
+                            listener.yes(new TrustedContact(phone[0],name[0]));
+                        return false;
+                    }
+                })
+                .setNegativeButton(getString(R.string.back), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        if(listener != null)
+                            listener.no();
+                        return false;
+                    }
+                }).show();
+    }
+
+    public static void EditContactDialog(final Context context, TrustedContact contact,
+                                         final int position, final EditContactListener listener){
+        View view = View.inflate(context,R.layout.add_contact_layout,null);
+        final EditText et_name = (EditText) view.findViewById(R.id.et_name);
+        final EditText et_phone = (EditText) view.findViewById(R.id.et_phone);
+        TextView title = (TextView) view.findViewById(R.id.tv_title);
+        title.setText(getString(R.string.device_edit));
+        et_name.setText(contact.getName());
+        et_phone.setText(contact.getPhonenumber());
+        final String[] name = {et_name.getText().toString().trim()};
+        final String[] phone = {et_phone.getText().toString().trim()};
+        new MaterialDialog.Builder(context)
+                .setContentView(view)
+                .setPositiveButton(getString(R.string.device_edit), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        name[0] = et_name.getText().toString().trim();
+                        phone[0] = et_phone.getText().toString().trim();
+                        if(StringUtil.isNull(name[0]) || StringUtil.isNull(phone[0])){
+                            ToastUtil.showToastShort(context,R.string.fail_empty);
+                            return false;
+                        }
+                        if( listener != null)
+                            listener.yes(new TrustedContact(phone[0],name[0]),position);
+                        return false;
+                    }
+                })
+                .setNeutralButton(getString(R.string.delete), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        if(listener != null)
+                            listener.delete(position);
+                        return false;
+                    }
+                })
+                .setNegativeButton(getString(R.string.back), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        return false;
+                    }
+                }).show();
     }
 
     public static void showSpinnerBarDialog(Context context,final ActionType actionType,
@@ -125,8 +202,9 @@ public class DialogUtil {
         TextView title = (TextView) view.findViewById(R.id.tv_title);
         final TextView value = (TextView) view.findViewById(R.id.tv_volume);
         String text = String.format(getString(R.string.noti_on_off),getString(R.string.on));
-        if(!StringUtil.isNull(defValue))
-            text = String.format(getString(R.string.noti_on_off),defValue);
+        if(!StringUtil.isNull(defValue)) {
+            text = String.format(getString(R.string.noti_on_off), defValue);
+        }
         value.setText(text);
         title.setText(getString(R.string.noti));
         final String[] editValue = {defValue};
@@ -254,5 +332,15 @@ public class DialogUtil {
     public interface DialogDataListener{
         void yes(String number,ActionType actionType);
         void no();
+    }
+
+    public interface DialogContactListener{
+        void yes(TrustedContact contact);
+        void no();
+    }
+
+    public interface EditContactListener{
+        void yes(TrustedContact contact,int position);
+        void delete(int position);
     }
 }
