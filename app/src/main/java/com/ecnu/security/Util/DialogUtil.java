@@ -2,12 +2,17 @@ package com.ecnu.security.Util;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -17,6 +22,11 @@ import com.ecnu.security.Model.ActionType;
 import com.ecnu.security.Model.DeviceModel;
 import com.ecnu.security.Model.TrustedContact;
 import com.ecnu.security.R;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.ecnu.security.Util.ResourceUtil.getString;
 
@@ -70,6 +80,85 @@ public class DialogUtil {
                     }
                 }).show();
 
+    }
+
+    public static void deviceListDialog(final Context context, final List<DeviceModel> models,
+                                        final int id, final DeviceListener listener){
+        final int[] position = {0};
+        View view = View.inflate(context,R.layout.device_list_layout,null);
+        ArrayList<String> str = new ArrayList<>();
+        for(DeviceModel model:models){
+            str.add(model.getName());
+        }
+        final ListViewCompat listViewCompat = (ListViewCompat) view.findViewById(R.id.listview);
+        listViewCompat.setAdapter(new ArrayAdapter<String>(context,android.R.layout.simple_list_item_single_choice
+                ,str));
+        listViewCompat.setChoiceMode(ListViewCompat.CHOICE_MODE_SINGLE);
+        listViewCompat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                position[0] = i;
+            }
+        });
+        new MaterialDialog.Builder(context)
+                .setContentView(view)
+                .setCanceledOnTouchOutside(false)
+                .setPositiveButton(getString(R.string.yes), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        if(listener != null){
+                            listener.select(models.get(position[0]),id);
+                        }
+                        return false;
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        return false;
+                    }
+                }).show();
+    }
+
+    public static void doneDialog(final Context context){
+        View view = View.inflate(context,R.layout.image_layout,null);
+        ImageView imageView = (ImageView) view.findViewById(R.id.iv_image);
+        imageView.setImageResource(R.drawable.ic_done);
+        new MaterialDialog.Builder(context)
+                .setContentView(view)
+                .setPositiveButton(getString(R.string.back), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        return false;
+                    }
+                })
+                .show();
+    }
+
+    public static void callContactDialog(final Context context, final String phone, final CallDialog callDialog){
+        View view = View.inflate(context,R.layout.image_layout,null);
+        new MaterialDialog.Builder(context)
+                .setContentView(view)
+                .setPositiveButton(getString(R.string.call), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        callDialog.callPhone(phone);
+                        return false;
+                    }
+                })
+                .setNeutralButton(getString(R.string.sos), new MaterialDialog.OnClickListener() {
+                    @Override
+                    public boolean onClick(DialogInterface dialog, int which) {
+                        callDialog.setSOS(phone);
+                        return false;
+                    }
+                })
+                .setNegativeButton(getString(R.string.back), new MaterialDialog.OnClickListener() {
+            @Override
+            public boolean onClick(DialogInterface dialog, int which) {
+                return false;
+            }
+        }).show();
     }
 
     public static void addContactDialog(final Context context, final DialogContactListener listener){
@@ -324,6 +413,10 @@ public class DialogUtil {
     }
 
 
+    public interface CallDialog{
+        void callPhone(String phone);
+        void setSOS(String phone);
+    }
     public interface DialogListener{
         void yes();
         void no();
@@ -343,4 +436,9 @@ public class DialogUtil {
         void yes(TrustedContact contact,int position);
         void delete(int position);
     }
+
+    public interface DeviceListener{
+        void select(DeviceModel deviceModel,int id);
+    }
+
 }

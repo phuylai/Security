@@ -130,6 +130,7 @@ public class ProfileFragment extends BaseFragment implements DetailItemHolder.It
         detailItemHolders.add(detailItemMaker.addRedirectHolder());
         detailItemHolders.add(detailItemMaker.addTrustedHolder());
         detailItemHolders.add(detailItemMaker.addNotiHolder());
+        detailItemHolders.add(detailItemMaker.addChangeAP());
         detailItemHolders.add(detailItemMaker.addButton(this));
         addToBody(detailItemHolders);
 
@@ -213,6 +214,11 @@ public class ProfileFragment extends BaseFragment implements DetailItemHolder.It
     @Override
     public void trustedContactClick() {
         activity.goToFragment(new ContactListFragment());
+    }
+
+    @Override
+    public void changeAP() {
+        activity.goToFragment(new ChangeAPFragment());
     }
 
     @Override

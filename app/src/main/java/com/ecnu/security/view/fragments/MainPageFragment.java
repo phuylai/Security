@@ -2,6 +2,7 @@ package com.ecnu.security.view.fragments;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.ecnu.security.Model.DeviceModel;
 import com.ecnu.security.Model.SMSModel;
 import com.ecnu.security.MyReceiver;
 import com.ecnu.security.R;
+import com.ecnu.security.Util.DialogUtil;
 import com.ecnu.security.Util.MyPreference;
 import com.ecnu.security.Util.StringUtil;
 import com.ecnu.security.view.activities.JsonHelper;
@@ -45,7 +47,7 @@ import retrofit2.http.Body;
  * Created by Phuylai on 2017/4/26.
  */
 
-public class MainPageFragment extends BaseFragment implements View.OnClickListener {
+public class MainPageFragment extends BaseFragment implements View.OnClickListener, DialogUtil.DeviceListener {
 
     private View mView;
 
@@ -111,6 +113,8 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
         s3 = (SwitchCompat) rootView.findViewById(R.id.sw_danger);
         s4 = (SwitchCompat) rootView.findViewById(R.id.sw_led);
         sos = (Button) rootView.findViewById(R.id.bt_sos);
+        deviceModelList.clear();
+        deviceModelList.addAll(activity.getDeviceModels());
         if(alertDevice != null){
             processMessage(alertDevice);
         }
@@ -121,12 +125,11 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
     public void processMessage(AlertDevice alertDevice) {
         imageView.setImageResource(R.drawable.button_red);
         this.alertDevice = alertDevice;
-        deviceModelList.clear();
-        deviceModelList.addAll(activity.getDeviceModels());
         String module = alertDevice.getModule();
         for(DeviceModel deviceModel:deviceModelList){
             if(deviceModel.getDevId().equals(alertDevice.getDevice_id())){
                 module += "\n"  + deviceModel.getName();
+                this.alertDevice.setDevice_pw(deviceModel.getDevPW());
             }
         }
         tv_action.setText(module);
@@ -159,16 +162,15 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+
+
     @Override
     public void onClick(View view) {
+        activity.removeTimer();
         switch (view.getId()){
             case R.id.sw_sys:
                 if(s1.isChecked()){
-                    s3.setChecked(true);
-                    s4.setChecked(true);
-                    imageView.setImageResource(R.drawable.button_red);
-                    String commandJson = "{\"led\":1,\"sound\":1}";
-                    sendCommand(commandJson);
+                    DialogUtil.deviceListDialog(activity,deviceModelList,R.id.sw_sys,this);
                 }else{
                     s3.setChecked(false);
                     s4.setChecked(false);
@@ -185,60 +187,33 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
                 checkSwitchCompat(s4);
                 break;
             case R.id.bt_sos:
-                sendSMS();
+                callPhone();
                 break;
         }
     }
 
-    private void sendSMS(){
-        SMSModel smsModel = new SMSModel();
-        smsModel.setAccountSid(Constants._SID);
-        smsModel.setSmsContent("test");
-        smsModel.setTo("13127771810");
-        smsModel.setTimestamp(StringUtil.timeStamp());
-        smsModel.setSig(StringUtil.getMd5(Constants._SID+Constants.PARAM_TOKEN+smsModel.getTimestamp()));
-        /*RequestBody body = RequestBody.create(MediaType.parse("Content-type:application/x-www-form-urlencoded;charset=UTF-8"),smsModel.toString());
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants._BASEURL)
-                .build();
-        ApiCallInterface service = retrofit.create(ApiCallInterface.class);
-        Call<ResponseBody> call = service.getSentSMS(body);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                MLog.i("sms",response.toString());
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                MLog.i("sms",t.getMessage());
-            }
-        });*/
-        String result = StringUtil.post(Constants._BASEURL+Constants._SMSURL,smsModel.toString());
-        MLog.i("sms",result);
-
+    private void callPhone(){
+        String phone = myPreference.getSOS();
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phone));
+        startActivity(intent);
     }
 
     private void checkSwitchCompat(SwitchCompat sw){
         if(sw.isChecked()){
-            s1.setChecked(true);
-            imageView.setImageResource(R.drawable.button_red);
             if(sw.getId() == R.id.sw_danger){
-                String commandJson = "{\"led\":1}";
-                sendCommand(commandJson);
+                DialogUtil.deviceListDialog(activity,deviceModelList,R.id.sw_danger,this);
             }else{
-                String commandJson = "{\"sound\":1}";
-                sendCommand(commandJson);
+                DialogUtil.deviceListDialog(activity,deviceModelList,R.id.sw_led,this);
             }
         }else if(!s3.isChecked() && !s4.isChecked()){
             s1.setChecked(false);
             imageView.setImageResource(R.drawable.button_green);
             tv_action.setText("");
             if(sw.getId() == R.id.sw_danger){
-                String commandJson = "{\"led\":0}";
+                String commandJson = "{\"sound\":0}";
                 sendCommand(commandJson);
             }else{
-                String commandJson = "{\"sound\":0}";
+                String commandJson = "{\"led\":0}";
                 sendCommand(commandJson);
             }
         }
@@ -246,10 +221,10 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
 
     private void sendCommand(String jsonString){
         CommandPara commandPara = new CommandPara();
-        //TODO:
-        //commandPara.deviceid = deviceid is sent by the device
-        //commandPara.devicepw = deviceid is mapped to get name n pw
+        commandPara.deviceid = alertDevice.getDevice_id();
+        commandPara.devicepw = alertDevice.getDevice_pw();
         commandPara.command = jsonString;
+        MLog.i("command",jsonString);
         miCODevice.sendCommand(commandPara, new ControlDeviceCallBack() {
             @Override
             public void onSuccess(String message) {
@@ -261,5 +236,29 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
                 MLog.i("send command",message);
             }
         },myPreference.getToken());
+    }
+
+    @Override
+    public void select(DeviceModel deviceModel,int id) {
+        imageView.setImageResource(R.drawable.button_red);
+        s1.setChecked(true);
+        if(alertDevice == null)
+            alertDevice = new AlertDevice();
+        String commandJson = "";
+        if(id == R.id.sw_sys) {
+            s3.setChecked(true);
+            s4.setChecked(true);
+            commandJson = "{\"led\":1,\"sound\":1}";
+        }else if(id == R.id.sw_danger){
+            s3.setChecked(true);
+            commandJson = "{\"sound\":1}";
+        }else if(id == R.id.sw_led){
+            s4.setChecked(true);
+            commandJson = "{\"led\":1}";
+        }
+        tv_action.setText(deviceModel.getName());
+        alertDevice.setDevice_pw(deviceModel.getDevPW());
+        alertDevice.setDevice_id(deviceModel.getDevId());
+        sendCommand(commandJson);
     }
 }

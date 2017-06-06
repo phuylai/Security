@@ -64,6 +64,11 @@ public class DetailItemMaker {
                 true,itemClickListener);
     }
 
+    public BaseViewHolder addChangeAP(){
+        return new DetailItemHolder(context,R.drawable.ic_wifi,R.string.change_ap,ActionType.CHANGE,
+                true,itemClickListener);
+    }
+
     public BaseViewHolder addNameHolder(){
         return new DetailItemHolder(context,R.drawable.ic_electrical_sensor,R.string.device_name,
                 ActionType.NAME,true,itemClickListener);

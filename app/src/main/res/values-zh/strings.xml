@@ -94,5 +94,11 @@
     <string name="add">添加</string>
     <string name="fail.empty">填写好名称和手机号码</string>
     <string name="delete">删除</string>
+    <string name="select.device">选择设备</string>
+    <string name="sms.sent.contact">短信已发送至信任联系</string>
+    <string name="call">拨打</string>
+    <string name="sos">SOS</string>
+    <string name="change">更换</string>
+    <string name="change.ap">更换接入点</string>
 
 </resources>

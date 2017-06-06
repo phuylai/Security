@@ -67,7 +67,7 @@ public class MicoUserExt{
      * @param micocb
      */
     public void setNote(String note, MiCOCallBack micocb,String token) {
-        if (comfunc.checkPara(note,token)) {
+        if (comfunc.checkPara(token)) {
             JSONObject postParam = new JSONObject();
             try {
                 postParam.put("note",note);

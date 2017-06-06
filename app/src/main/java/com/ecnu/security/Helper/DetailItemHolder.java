@@ -33,6 +33,7 @@ public class DetailItemHolder extends BaseViewHolder implements Cloneable{
         void notiClick();
         void redirectClick();
         void trustedContactClick();
+        void changeAP();
     }
 
     public DetailItemHolder(Context context, int iconImageId, int actionStringId,
@@ -60,6 +61,7 @@ public class DetailItemHolder extends BaseViewHolder implements Cloneable{
                 case REDIRECT:
                 case TRUSTED:
                 case NOTI:
+                case CHANGE:
                     tv_name.setTextColor(context.getResources().getColor(R.color.text_grey));
                     break;
             }
@@ -110,6 +112,12 @@ public class DetailItemHolder extends BaseViewHolder implements Cloneable{
             itemClickListener.trustedContactClick();
     }
 
+    public void changeAP(){
+        if(itemClickListener != null){
+            itemClickListener.changeAP();
+        }
+    }
+
 
     @Override
     public int getLayoutId() {
@@ -151,6 +159,9 @@ public class DetailItemHolder extends BaseViewHolder implements Cloneable{
                 break;
             case NOTI:
                 notificationClick();
+                break;
+            case CHANGE:
+                changeAP();
                 break;
         }
     }

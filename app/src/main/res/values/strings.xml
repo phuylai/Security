@@ -96,4 +96,10 @@
     <string name="add">Add</string>
     <string name="fail.empty">Name or Phone is empty</string>
     <string name="delete">Delete</string>
+    <string name="select.device">Select Device</string>
+    <string name="sms.sent.contact">Message sent to trusted contacts</string>
+    <string name="call">Call</string>
+    <string name="sos">SOS</string>
+    <string name="change">Change</string>
+    <string name="change.ap">Change Access Point</string>
 </resources>

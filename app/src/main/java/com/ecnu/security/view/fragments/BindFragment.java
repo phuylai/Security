@@ -64,7 +64,7 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
 
     private EditText et_ssid;
     private EditText et_password;
-    private Button btn;
+    protected Button btn;
     private RecyclerView recyclerView;
 
     private DeviceModel foundDevice;
@@ -288,10 +288,15 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
                         isHaveSuper,model,protocol));
                 if(deviceAdapter != null)
                     deviceAdapter.notifyDataSetChanged();
+                changeAccessPoint();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    protected void changeAccessPoint(){
+
     }
 
     public void countTime() {
@@ -327,7 +332,7 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
             public void onSuccess(String message) {
                 String id = JsonHelper.getDeviceId(message);
                 ToastUtil.showToastShort(activity,message);
-                listenDevice(id);
+                activity.addDevice();
             }
 
             @Override
@@ -361,6 +366,7 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
                 ToastUtil.showToastLong(activity,message);
                 getFragmentManager().popBackStack();
             }
+
         });
 
     }

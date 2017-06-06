@@ -146,6 +146,7 @@ public class Constants {
     public static final String INFRARED_SENSOR = "InfraredSensor";
     public static final String SMOKE_SENSOR = "SmokeSensor";
     public static final String NOTI_TYPE = "NOTI_TYPE";
+    public static final String PARAM_SOS = "sos";
 
     //login
     public static final String PARAM_LOGIN = "PARAM_LOGIN";

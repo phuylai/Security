@@ -73,8 +73,8 @@ public class MainActivity extends BaseActivity {
     private MiCODevice miCODevice;
     private MyReceiver myReceiver = new MyReceiver();
     private String message = null;
-    private boolean noti = true;
     private AlertDevice alert;
+    private boolean stopTimer = false;
 
     private int secondCount = Constants.MINUTE_SECOND;
     private Runnable timer = null;
@@ -102,13 +102,16 @@ public class MainActivity extends BaseActivity {
                         countTime();
                         sendBroadcast(intent);
                     }
-                    if(mainPageFragment != null && SecurityApp.isActivityVisible()) {
+                    if(mainPageFragment != null && SecurityApp.isActivityVisible() && getWorkMode()) {
                         mainPageFragment.processMessage(alert);
+                    }
+                    else if(getAwayMode()){
+                        ToastUtil.showToastShort(getApplicationContext(),R.string.sms_sent_contact);
                     }
                     break;
                 case Constants.TIMER_END:
-                    //TODO: do the  transfer
-
+                    secondCount = Constants.MINUTE_SECOND;
+                    ToastUtil.showToastShort(getApplicationContext(), R.string.sms_sent_contact);
                     break;
                 default:
                     super.handleMessage(msg);
@@ -118,6 +121,14 @@ public class MainActivity extends BaseActivity {
 
     public void setAlertNull(){
         alert = null;
+    }
+
+    public boolean getWorkMode(){
+        return MyPreference.getInstance(this).getMode().equals(ActionType.WORK.toString());
+    }
+
+    public boolean getAwayMode(){
+        return MyPreference.getInstance(this).getMode().equals(ActionType.AWAY.toString());
     }
 
     public boolean getNoti(){
@@ -253,6 +264,7 @@ public class MainActivity extends BaseActivity {
 
     private void getDevices(){
         String token = MyPreference.getInstance(this).getToken();
+        deviceModels.clear();
         miCODevice.getDeviceList(new MiCOCallBack() {
             @Override
             public void onSuccess(String message) {
@@ -282,6 +294,10 @@ public class MainActivity extends BaseActivity {
                 MLog.i("MAIN",message);
             }
         },token);
+    }
+
+    public void addDevice(){
+        getDevices();
     }
 
     public void listenToDevices(){
@@ -598,6 +614,11 @@ public class MainActivity extends BaseActivity {
         @Override
         public void run() {
             while (true) {
+                if(stopTimer) {
+                    secondCount = Constants.MINUTE_SECOND;
+                    stopTimer = false;
+                    return;
+                }
                 Message message = new Message();
                 if (secondCount == 0) {
                     message.what = Constants.TIMER_END;
@@ -620,8 +641,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void removeTimer(){
-        if(timer != null)
-            handler.removeCallbacks(timer);
+        stopTimer = true;
     }
 
     public List<DeviceModel> getDeviceModels(){

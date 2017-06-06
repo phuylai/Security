@@ -136,12 +136,12 @@ public class ModeFragment extends BaseFragment implements ModeHolder.ModeClickLi
     public void peace() {
         h1.cancelClick();
         h3.cancelClick();
-        if(compareMode(ActionType.PEACE,mode)){
+        if(compareMode(ActionType.PEACE,getMode())){
             return;
         }else{
             progressBar.setVisibility(View.VISIBLE);
             String value = ActionType.PEACE.toString();
-            stopListenToDevice(value);
+            updateUserInfo(value,false);
         }
     }
 
@@ -150,11 +150,11 @@ public class ModeFragment extends BaseFragment implements ModeHolder.ModeClickLi
     public void work() {
         h2.cancelClick();
         h3.cancelClick();
-        if(compareMode(ActionType.WORK,mode)){
+        if(compareMode(ActionType.WORK,getMode())){
             return;
         }else{
             progressBar.setVisibility(View.VISIBLE);
-            startListenDevice(ActionType.WORK.toString());
+            updateUserInfo(ActionType.WORK.toString(),true);
         }
     }
 
@@ -162,52 +162,23 @@ public class ModeFragment extends BaseFragment implements ModeHolder.ModeClickLi
     public void away() {
         h1.cancelClick();
         h2.cancelClick();
-        if(compareMode(ActionType.AWAY,mode)){
+        if(compareMode(ActionType.AWAY,getMode())){
             return;
         }else {
             progressBar.setVisibility(View.VISIBLE);
             String value = ActionType.AWAY.toString();
-            if(ActionType.getType(mode) == ActionType.PEACE){
-                startListenDevice(value);
-            }else {
-                updateUserInfo(value);
-            }
+            updateUserInfo(value,false);
         }
     }
 
-    private void startListenDevice(String value){
-        progressBar.setVisibility(View.VISIBLE);
-        activity.listenToDevices();
-        updateUserInfo(value);
-    }
-
-    private void stopListenToDevice(final String value){
-        progressBar.setVisibility(View.VISIBLE);
-        stopListen();
-        updateUserInfo(value);
-    }
-
-    public void stopListen(){
-        miCODevice.stopListenDevice(new ControlDeviceCallBack() {
-            @Override
-            public void onSuccess(String message) {
-                ToastUtil.showToastShort(activity,R.string.peace);
-            }
-
-            @Override
-            public void onFailure(int code, String message) {
-                ToastUtil.showToastShort(activity,message);
-            }
-        });
-    }
-
-    private void updateUserInfo(final String value){
+    private void updateUserInfo(final String value,final boolean noti){
         MicoUserExt micoUserExt = new MicoUserExt();
         micoUserExt.setMode(value, new MiCOCallBack() {
             @Override
             public void onSuccess(String message) {
                 progressBar.setVisibility(View.GONE);
                 myPreference.setMode(value);
+                myPreference.setNoti(noti);
                 ToastUtil.showToastLong(activity,message);
             }
 
@@ -217,5 +188,10 @@ public class ModeFragment extends BaseFragment implements ModeHolder.ModeClickLi
                 ToastUtil.showToastLong(activity,message);
             }
         },myPreference.getToken());
+    }
+
+    private String getMode(){
+        mode = myPreference.getMode();
+        return mode;
     }
 }

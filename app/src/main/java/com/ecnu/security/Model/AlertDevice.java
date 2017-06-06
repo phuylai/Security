@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 public class AlertDevice implements Serializable{
     private String device_id;
+    private String device_pw;
     private String module;
 
     public AlertDevice(){
@@ -33,5 +34,13 @@ public class AlertDevice implements Serializable{
 
     public void setModule(String module) {
         this.module = module;
+    }
+
+    public String getDevice_pw() {
+        return device_pw;
+    }
+
+    public void setDevice_pw(String device_pw) {
+        this.device_pw = device_pw;
     }
 }

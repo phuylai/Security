@@ -192,5 +192,14 @@ public class MyPreference {
         return settings.getBoolean(Constants.FIRST_RUN_TAG,true);
     }
 
+    public void setSOS(String phone){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_SOS,phone);
+        editor.apply();
+    }
+
+    public String getSOS(){
+        return settings.getString(Constants.PARAM_SOS,"211");
+    }
 
 }

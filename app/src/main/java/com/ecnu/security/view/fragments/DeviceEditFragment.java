@@ -41,6 +41,7 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
     private LinearLayout bodyView;
     private List<BaseViewHolder> detailItemHolders = new ArrayList<>();
     private DeviceModel deviceModel;
+    private List<DeviceModel> deviceModelList = new ArrayList<>();
 
     private ProgressBar progressBar;
 
@@ -88,6 +89,8 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
     @Override
     protected void findViews(View rootView) {
         myPreference = MyPreference.getInstance(activity);
+        deviceModelList.clear();
+        deviceModelList.addAll(activity.getDeviceModels());
         bodyView = (LinearLayout) rootView.findViewById(R.id.ll_details_view);
         progressBar = (ProgressBar) rootView.findViewById(R.id.pb_sending_post);
         setView();
@@ -236,6 +239,11 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
         String newName = (String) selectedItem;
         deviceModel.setName(newName);
         setView();
+        for(DeviceModel deviceModel:deviceModelList){
+            if(deviceModel.getDevId().equals(this.deviceModel.getDevId())){
+                deviceModel.setName(newName);
+            }
+        }
     }
 
     @Override
@@ -250,6 +258,11 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
 
     @Override
     public void trustedContactClick() {
+
+    }
+
+    @Override
+    public void changeAP() {
 
     }
 }

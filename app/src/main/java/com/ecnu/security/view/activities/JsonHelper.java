@@ -123,7 +123,7 @@ public class JsonHelper {
                 JSONObject info = new JSONObject(data);
                 String deviceinfo = info.getString(Constants.PARAM_DEVICEINFO);
                 JSONObject device = new JSONObject(deviceinfo);
-                String id = device.getString(Constants.ALERT_ID);
+                String id = device.getString(Constants.PARAM_DEV_ID);
                 String module = info.getString(Constants.MODULE);
                 alertDevice.setDevice_id(id);
                 alertDevice.setModule(module);
