@@ -129,6 +129,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             miCOUser.login(username, password, Constants._APPID(), new MiCOCallBack() {
                 @Override
                 public void onSuccess(String message) {
+                    pb_login_in_progress.setVisibility(View.GONE);
                     String token = JsonHelper.getFogToken(message);
                     String clientId = JsonHelper.getClientId(message);
                     if(!StringUtil.isNull(token) && !StringUtil.isNull(clientId)) {
@@ -147,6 +148,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 @Override
                 public void onFailure(int code, String message) {
                     showToast(R.string.fail_login);
+                    pb_login_in_progress.setVisibility(View.GONE);
+                    enableLogIn();
                 }
             });
         }

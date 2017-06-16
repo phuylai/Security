@@ -134,7 +134,7 @@ public class MyPreference {
     }
 
     public String getAlarmVolume(){
-        return settings.getString(Constants.PARAM_VALUE,"");
+        return settings.getString(Constants.PARAM_ALARM,"5");
     }
 
     public void setLedSpeed(String speed){
@@ -144,7 +144,7 @@ public class MyPreference {
     }
 
     public String getLedSpeed(){
-        return settings.getString(Constants.PARAM_LED,"");
+        return settings.getString(Constants.PARAM_LED,"5");
     }
 
     public void setNoti(boolean enable){

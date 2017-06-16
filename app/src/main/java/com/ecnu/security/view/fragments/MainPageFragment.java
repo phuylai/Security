@@ -176,7 +176,7 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
                     s4.setChecked(false);
                     imageView.setImageResource(R.drawable.button_green);
                     tv_action.setText("");
-                    String commandJson = "{\"led\":0,\"sound\":0}";
+                    String commandJson = "{\"command_id\":3,\"motor_switch\":false,\"rgb_led_b\":0}";
                     sendCommand(commandJson);
                 }
                 break;
@@ -210,12 +210,18 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
             imageView.setImageResource(R.drawable.button_green);
             tv_action.setText("");
             if(sw.getId() == R.id.sw_danger){
-                String commandJson = "{\"sound\":0}";
+                String commandJson = "{\"command_id\":2,\"motor_switch\":false}";
                 sendCommand(commandJson);
             }else{
-                String commandJson = "{\"led\":0}";
+                String commandJson = "{\"command_id\":1,\"rgb_led_b\":0}";
                 sendCommand(commandJson);
             }
+        }else if(!s3.isChecked()){
+            String commandJson = "{\"command_id\":2,\"motor_switch\":false}";
+            sendCommand(commandJson);
+        }else if(!s4.isChecked()){
+            String commandJson = "{\"command_id\":1,\"rgb_led_b\":0}";
+            sendCommand(commandJson);
         }
     }
 
@@ -248,13 +254,14 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
         if(id == R.id.sw_sys) {
             s3.setChecked(true);
             s4.setChecked(true);
-            commandJson = "{\"led\":1,\"sound\":1}";
+            int led = Integer.parseInt(myPreference.getLedSpeed())*25;
+            commandJson = "{\"command_id\":3,\"motor_switch\":true,\"rgb_led_b\":" + led + "}";
         }else if(id == R.id.sw_danger){
             s3.setChecked(true);
-            commandJson = "{\"sound\":1}";
+            commandJson = "{\"command_id\":2,\"motor_switch\":true}";
         }else if(id == R.id.sw_led){
             s4.setChecked(true);
-            commandJson = "{\"led\":1}";
+            commandJson = "{\"command_id\":1,\"rgb_led_b\":100}";
         }
         tv_action.setText(deviceModel.getName());
         alertDevice.setDevice_pw(deviceModel.getDevPW());

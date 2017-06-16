@@ -85,7 +85,7 @@
     <string name="work">Normal Mode</string>
     <!--setting-->
     <string name="danger.volume">Alarm Volume</string>
-    <string name="led.speed">LED Speed</string>
+    <string name="led.speed">LED Brightness</string>
     <string name="noti">Notification</string>
     <string name="redirect">Redirect</string>
     <string name="trusted.contact">Trusted Contact</string>

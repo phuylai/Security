@@ -1,6 +1,7 @@
 package com.ecnu.security.view.fragments;
 
 import android.bluetooth.BluetoothClass;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -11,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ecnu.security.Controller.AsyncTaskController;
+import com.ecnu.security.Controller.CurrentSession;
 import com.ecnu.security.Controller.FragmentFactory;
 import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.Helper.MLog;
@@ -56,6 +59,11 @@ public class DeviceListFragment extends BaseFragment implements DeviceAdapter.De
 
     protected RecyclerView recyclerView;
 
+    private MyPreference myPreference;
+
+    private AsyncTask<Object,Void,List<DeviceModel>> dbload = null;
+    private AsyncTask<Object,Void,Void> dbsave = null;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,16 +87,41 @@ public class DeviceListFragment extends BaseFragment implements DeviceAdapter.De
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         miCODevice = new MiCODevice(activity);
-        getDeviceList();
+        myPreference = MyPreference.getInstance(activity);
+        //getDeviceList();
+        loadDevices();
+    }
+
+    private synchronized void loadDevices(){
+        if(dbload != null)
+            return;
+        dbload = new AsyncTask<Object, Void, List<DeviceModel>>() {
+            @Override
+            protected List<DeviceModel> doInBackground(Object... objects) {
+                return CurrentSession.getDevices(activity,myPreference.getClientID());
+            }
+
+            @Override
+            protected void onPostExecute(List<DeviceModel> deviceModels) {
+                dbload = null;
+                if(deviceModels != null && deviceModels.size() > 0){
+                    deviceModelList.clear();
+                    deviceModelList.addAll(deviceModels);
+                    refreshList();
+                }
+                getDeviceList();
+            }
+        };
+        AsyncTaskController.startTask(dbload);
     }
 
     private void getDeviceList(){
         String token = MyPreference.getInstance(activity).getToken();
-        deviceModelList.clear();
         miCODevice.getDeviceList(new MiCOCallBack() {
             @Override
             public void onSuccess(String message) {
                 MLog.i(TAG,message);
+                deviceModelList.clear();
                 String data = JsonHelper.getData(message);
                 try {
                     JSONArray jsonArray = new JSONArray(data);
@@ -103,12 +136,11 @@ public class DeviceListFragment extends BaseFragment implements DeviceAdapter.De
                         String proId = temp.getString(Constants.PARAM_DEV_ID);
                         deviceModelList.add(new DeviceModel(name,mac,pw,isSub,role,online,proId));
                         refreshList();
+                        saveDevices();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
             }
 
             @Override
@@ -122,6 +154,26 @@ public class DeviceListFragment extends BaseFragment implements DeviceAdapter.De
         if(mUiHandler == null)
             return;
         RunnableManager.getInstance().postDelayed(this,DELAYMILLIS);
+    }
+
+    private synchronized void saveDevices(){
+        if(dbsave != null)
+            return;
+        dbsave = new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... objects) {
+                for(DeviceModel device:deviceModelList){
+                    CurrentSession.saveDevices(activity,device,myPreference.getClientID());
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                dbsave = null;
+            }
+        };
+        AsyncTaskController.startTask(dbsave);
     }
 
     @Override

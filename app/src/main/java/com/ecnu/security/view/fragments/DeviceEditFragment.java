@@ -197,13 +197,13 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
         switch (actionType){
             case ALARM:
                 myPreference.setAlarmVolume(number);
-                String commandJson = "{\"alarm_volume\":"+number+"\"}";
-                sendCommand(commandJson);
+                //String commandJson = "{\"alarm_volume\":"+number+"\"}";
+                //sendCommand(commandJson);
                 break;
             case LED:
                 myPreference.setLedSpeed(number);
-                String command = "{\"led_speed\":"+number+"\"}";
-                sendCommand(command);
+                //String command = "{\"command_id\":3,\"motor_switch\":false,\"rgb_led_b\":0}";
+                //sendCommand(command);
                 break;
         }
     }

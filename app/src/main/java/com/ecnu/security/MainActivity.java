@@ -2,6 +2,7 @@ package com.ecnu.security;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.PersistableBundle;
@@ -16,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.ecnu.security.Controller.AsyncTaskController;
+import com.ecnu.security.Controller.CurrentSession;
 import com.ecnu.security.Controller.FragmentFactory;
 import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.Helper.MLog;
@@ -78,6 +81,8 @@ public class MainActivity extends BaseActivity {
 
     private int secondCount = Constants.MINUTE_SECOND;
     private Runnable timer = null;
+
+    private AsyncTask<Object,Void,Void> dbsave = null;
 
     private final android.os.Handler handler = new android.os.Handler(){
         @Override
@@ -302,6 +307,7 @@ public class MainActivity extends BaseActivity {
 
     public void listenToDevices(){
         List<ListenDevParFog> listenDevParFogs = new ArrayList<>();
+        saveDeviceToDB();
         for(int i = 0;i < deviceModels.size(); i++){
             ListenDevParFog listenDevParFog = new ListenDevParFog();
             listenDevParFog.userName = myPreference.getClientID();
@@ -338,6 +344,27 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    private synchronized void saveDeviceToDB(){
+        if(dbsave != null){
+            return;
+        }
+        dbsave = new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... objects) {
+                for(DeviceModel device:deviceModels){
+                    CurrentSession.saveDevices(getApplicationContext(),device,myPreference.getClientID());
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                dbsave = null;
+            }
+        };
+        AsyncTaskController.startTask(dbsave);
     }
 
     @Override

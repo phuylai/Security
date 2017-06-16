@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 
@@ -45,6 +46,7 @@ public class LoadingActivity extends BaseActivity{
     private static String TAG = LoadingActivity.class.getSimpleName();
 
     private List<DeviceModel> deviceModelList = new ArrayList<>();
+
     //UI
     private View iv_loading;
     private View rl_background;

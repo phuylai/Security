@@ -339,8 +339,9 @@ public class DialogUtil {
         AppCompatSeekBar seekBar = (AppCompatSeekBar) view.findViewById(R.id.s1);
         final String[] editValue = {defValue};
         String text = String.format(getString(R.string.value),"5");
-        if(!StringUtil.isNull(text)){
+        if(!StringUtil.isNull(editValue[0])){
             text = String.format(getString(R.string.value),defValue);
+            seekBar.setProgress(Integer.parseInt(editValue[0]));
         }
         value.setText(text);
         switch (actionType){

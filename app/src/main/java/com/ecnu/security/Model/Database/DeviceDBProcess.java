@@ -61,7 +61,7 @@ public class DeviceDBProcess {
         String sub =  cursor.getString(cursor.getColumnIndex(DeviceDB.KEY_SUB));
         String role =  cursor.getString(cursor.getColumnIndex(DeviceDB.KEY_ROLE));
         String online =  cursor.getString(cursor.getColumnIndex(DeviceDB.KEY_ONLINE));
-        String id =  cursor.getString(cursor.getColumnIndex(DeviceDB.KEY_ID));
+        String id =  cursor.getString(cursor.getColumnIndex(DeviceDB.KEY_DEVID));
         return new DeviceModel(name,mac,pw,sub,role,online,id);
     }
 
@@ -86,7 +86,7 @@ public class DeviceDBProcess {
         contentValues.put(DeviceDB.KEY_SUB,deviceModel.getIsSub());
         contentValues.put(DeviceDB.KEY_ROLE,deviceModel.getRole());
         contentValues.put(DeviceDB.KEY_ONLINE,deviceModel.getOnline());
-        contentValues.put(DeviceDB.KEY_ID,deviceModel.getDevId());
+        contentValues.put(DeviceDB.KEY_DEVID,deviceModel.getDevId());
         db.insertWithOnConflict(DeviceDB.TABLE_DEVICE,null,contentValues,SQLiteDatabase.CONFLICT_REPLACE);
         MLog.i("device db","save");
         return true;
