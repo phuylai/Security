@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,9 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.ecnu.security.Controller.AsyncTaskController;
+import com.ecnu.security.Controller.CurrentSession;
 import com.ecnu.security.Helper.Constants;
 import com.ecnu.security.Helper.MLog;
 import com.ecnu.security.Model.ActionType;
+import com.ecnu.security.Model.DeviceModel;
 import com.ecnu.security.Model.MicoUserExt;
 import com.ecnu.security.Model.TrustedContact;
 import com.ecnu.security.R;
@@ -60,6 +64,9 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
     protected long DELAYMILLIS = 200;
     private View mView;
 
+    private AsyncTask<Object,Void,List<TrustedContact>> dbload = null;
+    private AsyncTask<Object,Void,Void> dbsave = null;
+
     private MyPreference myPreference;
     private Handler handler = new Handler(){
         @Override
@@ -80,6 +87,13 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
             }
         }
     };
+
+    private void refreshList(){
+        models.clear();
+        models.addAll(contacts);
+        if(contactAdapter != null)
+            contactAdapter.notifyDataSetChanged();
+    }
 
     private MicoUserExt micoUserExt;
 
@@ -131,6 +145,29 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
         //recyclerView.setItemAnimator(new DefaultItemAnimator());
         listViewCompat.setAdapter(contactAdapter);
         listViewCompat.setOnItemClickListener(this);
+        loadContact();
+    }
+
+    private synchronized void loadContact(){
+        if(dbload != null)
+            return;
+        dbload = new AsyncTask<Object, Void, List<TrustedContact>>() {
+            @Override
+            protected List<TrustedContact> doInBackground(Object... objects) {
+                return CurrentSession.getContacts(context,myPreference.getClientID());
+            }
+
+            @Override
+            protected void onPostExecute(List<TrustedContact> trustedContacts) {
+                dbload = null;
+                if(trustedContacts != null && trustedContacts.size() > 0){
+                    contacts.clear();
+                    contacts.addAll(trustedContacts);
+                    refreshList();
+                }
+            }
+        };
+        AsyncTaskController.startTask(dbload);
         getContactList();
     }
 
@@ -140,8 +177,12 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
             public void onSuccess(String message) {
                 MLog.i("note",message);
                 String note = JsonHelper.getNote(message);
+                if(StringUtil.isNull(note)){
+                    return;
+                }
                 contacts.clear();
                 contacts.addAll(SplitString(note));
+                saveContact();
                 if(contacts != null) {
                     Message msg = new Message();
                     msg.what = Constants.PARAM_UPDATE;
@@ -156,6 +197,26 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
                 ToastUtil.showToast(message);
             }
         }, myPreference.getToken());
+    }
+
+    private synchronized void saveContact(){
+        if(dbsave != null)
+            return;
+        dbsave = new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... objects) {
+                for(TrustedContact trustedContact:contacts){
+                    CurrentSession.saveContact(activity,trustedContact,myPreference.getClientID());
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                dbsave = null;
+            }
+        };
+        AsyncTaskController.startTask(dbsave);
     }
 
     @Override

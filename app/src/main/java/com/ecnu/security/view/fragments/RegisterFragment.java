@@ -208,12 +208,12 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void getVerificationCode(String phone){
+        countTime();
         miCOUser.getVerifyCode(phone, Constants._APPID(), new MiCOCallBack() {
             @Override
             public void onSuccess(String message) {
                 ToastUtil.showToastShort(getActivity(),R.string.sms_sent);
                 setGettingCaptcha(true);
-                countTime();
             }
 
             @Override

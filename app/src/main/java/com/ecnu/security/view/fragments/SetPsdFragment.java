@@ -2,6 +2,8 @@ package com.ecnu.security.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,7 @@ import io.fog.fog2sdk.MiCOUser;
  * Created by Phuylai on 2017/5/2.
  */
 
-public class SetPsdFragment extends BaseFragment implements View.OnClickListener {
+public class SetPsdFragment extends BaseFragment implements View.OnClickListener, TextWatcher {
 
     private static final String TAG = SetPsdFragment.class.getName();
 
@@ -101,7 +103,7 @@ public class SetPsdFragment extends BaseFragment implements View.OnClickListener
             return false;
         }
         ResourceUtil.hiddenWarning(warningText);
-        return true;
+        return !StringUtil.isNull(passWord) && !StringUtil.isNull(confirmPassWord);
     }
 
     @Override
@@ -112,6 +114,8 @@ public class SetPsdFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void setListener() {
         register.setOnClickListener(this);
+        etConfirmPsd.addTextChangedListener(this);
+        etNewPsd.addTextChangedListener(this);
     }
 
     @Override
@@ -139,5 +143,28 @@ public class SetPsdFragment extends BaseFragment implements View.OnClickListener
             default:
                 break;
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        setActionButtonDisable(showInputInfo());
+        setActionButtonDisable(checkInputInfo());
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
+
+    protected boolean checkInputInfo() {
+        String newPsd = etNewPsd.getText().toString();
+        String confirm = etConfirmPsd.getText().toString();
+        return !(StringUtil.isNull(newPsd)
+                || !StringUtil.checkPassWord(newPsd)) && !(StringUtil.isNull(confirm) || !confirm.equals(newPsd));
     }
 }

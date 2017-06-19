@@ -101,17 +101,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         tv_forgetPassword.setOnClickListener(this);
     }
 
-    private boolean enableLogIn() {
-        if (pb_login_in_progress.getVisibility() == View.GONE) {
-            return false;
-        }
-
+    private void enableLogIn() {
         pb_login_in_progress.setVisibility(View.GONE);
         et_username.setEnabled(true);
         et_password.setEnabled(true);
-        setButtonDisable(checkInputInfo());
-
-        return true;
+        btn_login.setEnabled(true);
+        //setButtonDisable(checkInputInfo());
     }
 
     protected void startLoading() {

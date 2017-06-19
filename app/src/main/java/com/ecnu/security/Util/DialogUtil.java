@@ -115,6 +115,9 @@ public class DialogUtil {
                 .setNegativeButton(getString(R.string.cancel), new MaterialDialog.OnClickListener() {
                     @Override
                     public boolean onClick(DialogInterface dialog, int which) {
+                        if(listener != null){
+                            listener.cancel();
+                        }
                         return false;
                     }
                 }).show();
@@ -440,6 +443,7 @@ public class DialogUtil {
 
     public interface DeviceListener{
         void select(DeviceModel deviceModel,int id);
+        void cancel();
     }
 
 }

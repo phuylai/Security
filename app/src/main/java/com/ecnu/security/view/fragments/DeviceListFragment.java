@@ -109,10 +109,10 @@ public class DeviceListFragment extends BaseFragment implements DeviceAdapter.De
                     deviceModelList.addAll(deviceModels);
                     refreshList();
                 }
-                getDeviceList();
             }
         };
         AsyncTaskController.startTask(dbload);
+        getDeviceList();
     }
 
     private void getDeviceList(){
@@ -135,14 +135,15 @@ public class DeviceListFragment extends BaseFragment implements DeviceAdapter.De
                         String online = temp.getString(Constants.PARAM_ONLINE);
                         String proId = temp.getString(Constants.PARAM_DEV_ID);
                         deviceModelList.add(new DeviceModel(name,mac,pw,isSub,role,online,proId));
-                        refreshList();
-                        saveDevices();
+                        //refreshList();
+                        //saveDevices();
                     }
+                    refreshList();
+                    saveDevices();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(int code, String message) {
                 MLog.i(TAG,message);

@@ -268,4 +268,11 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
         alertDevice.setDevice_id(deviceModel.getDevId());
         sendCommand(commandJson);
     }
+
+    @Override
+    public void cancel() {
+        s1.setChecked(false);
+        s3.setChecked(false);
+        s4.setChecked(false);
+    }
 }

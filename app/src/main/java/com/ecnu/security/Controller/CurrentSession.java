@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.ecnu.security.Model.DeviceModel;
+import com.ecnu.security.Model.TrustedContact;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,6 +38,20 @@ public class CurrentSession {
         Collection<DeviceModel> deviceModels = DeviceDBController.getDeviceFromDB(context,clientID);
         if(deviceModels != null && deviceModels.size() > 0){
             return new ArrayList<>(deviceModels);
+        }
+        return null;
+    }
+
+    public static void saveContact(Context context, TrustedContact contact, String clientID){
+        if(contact == null)
+            return;
+        ContactDBController.saveContactDB(context,contact,clientID);
+    }
+
+    public static List<TrustedContact> getContacts(Context context,String clientID){
+        Collection<TrustedContact> contacts = ContactDBController.getContactDB(context,clientID);
+        if(contacts != null && contacts.size() > 0){
+            return new ArrayList<>(contacts);
         }
         return null;
     }
