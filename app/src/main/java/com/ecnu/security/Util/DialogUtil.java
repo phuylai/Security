@@ -124,6 +124,8 @@ public class DialogUtil {
     }
 
     public static void doneDialog(final Context context){
+        if(context == null)
+            return;
         View view = View.inflate(context,R.layout.image_layout,null);
         ImageView imageView = (ImageView) view.findViewById(R.id.iv_image);
         imageView.setImageResource(R.drawable.ic_done);

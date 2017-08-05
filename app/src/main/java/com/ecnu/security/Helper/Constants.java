@@ -69,7 +69,7 @@ public class Constants {
     public static final int NOTIFICATION = -8;
     public static final int  PARAM_UPDATE = -9;
     public static final int ONE_SECOND = 1000;
-    public static final int MINUTE_SECOND = 60;
+    public static final int MINUTE_SECOND = 30;
     public static final int THREE_MIN = 180;
 
     //user
@@ -150,6 +150,9 @@ public class Constants {
 
     //login
     public static final String PARAM_LOGIN = "PARAM_LOGIN";
+
+    //alert preference
+    public static final String PARAM_ALERT = "alert";
 
 
 

@@ -47,7 +47,8 @@ import retrofit2.http.Body;
  * Created by Phuylai on 2017/4/26.
  */
 
-public class MainPageFragment extends BaseFragment implements View.OnClickListener, DialogUtil.DeviceListener {
+public class MainPageFragment extends BaseFragment implements View.OnClickListener, DialogUtil.DeviceListener,
+        DialogUtil.DialogListener {
 
     private View mView;
 
@@ -120,8 +121,6 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-
-
     public void processMessage(AlertDevice alertDevice) {
         imageView.setImageResource(R.drawable.button_red);
         this.alertDevice = alertDevice;
@@ -137,6 +136,17 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
         s3.setChecked(true);
         s4.setChecked(true);
         activity.setAlertNull();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(myPreference.getAlertOn()){
+            AlertDevice device = new AlertDevice();
+            device.setDevice_id(myPreference.getAlertDeviceID());
+            device.setModule(myPreference.getAlertDeviceModule());
+            processMessage(device);
+        }
     }
 
     @Override
@@ -166,29 +176,34 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        activity.removeTimer();
-        switch (view.getId()){
-            case R.id.sw_sys:
-                if(s1.isChecked()){
-                    DialogUtil.deviceListDialog(activity,deviceModelList,R.id.sw_sys,this);
-                }else{
-                    s3.setChecked(false);
-                    s4.setChecked(false);
-                    imageView.setImageResource(R.drawable.button_green);
-                    tv_action.setText("");
-                    String commandJson = "{\"command_id\":3,\"motor_switch\":false,\"rgb_led_b\":0}";
-                    sendCommand(commandJson);
-                }
-                break;
-            case R.id.sw_danger:
-                checkSwitchCompat(s3);
-                break;
-            case R.id.sw_led:
-                checkSwitchCompat(s4);
-                break;
-            case R.id.bt_sos:
-                callPhone();
-                break;
+        if(activity.getDeviceModels().size() == 0){
+            DialogUtil.showDialog(activity,R.string.reminder,R.string.bind_device_msg,this);
+        }else {
+            activity.removeTimer();
+            myPreference.alertOn(false);
+            switch (view.getId()) {
+                case R.id.sw_sys:
+                    if (s1.isChecked()) {
+                        DialogUtil.deviceListDialog(activity, deviceModelList, R.id.sw_sys, this);
+                    } else {
+                        s3.setChecked(false);
+                        s4.setChecked(false);
+                        imageView.setImageResource(R.drawable.button_green);
+                        tv_action.setText("");
+                        String commandJson = "{\"command_id\":3,\"motor_switch\":false,\"rgb_led_b\":0}";
+                        sendCommand(commandJson);
+                    }
+                    break;
+                case R.id.sw_danger:
+                    checkSwitchCompat(s3);
+                    break;
+                case R.id.sw_led:
+                    checkSwitchCompat(s4);
+                    break;
+                case R.id.bt_sos:
+                    callPhone();
+                    break;
+            }
         }
     }
 
@@ -271,6 +286,21 @@ public class MainPageFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void cancel() {
+        s1.setChecked(false);
+        s3.setChecked(false);
+        s4.setChecked(false);
+    }
+
+    @Override
+    public void yes() {
+        s1.setChecked(false);
+        s3.setChecked(false);
+        s4.setChecked(false);
+        activity.goToFragment(new BindFragment());
+    }
+
+    @Override
+    public void no() {
         s1.setChecked(false);
         s3.setChecked(false);
         s4.setChecked(false);

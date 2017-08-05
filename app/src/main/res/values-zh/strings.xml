@@ -100,5 +100,6 @@
     <string name="sos">SOS</string>
     <string name="change">更换</string>
     <string name="change.ap">更换接入点</string>
+    <string name="bind.device.msg">前往 设置 > 添加设备</string>
 
 </resources>

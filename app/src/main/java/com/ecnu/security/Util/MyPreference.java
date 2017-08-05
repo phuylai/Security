@@ -202,4 +202,34 @@ public class MyPreference {
         return settings.getString(Constants.PARAM_SOS,"211");
     }
 
+    public void alertOn(boolean on){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(Constants.PARAM_ALERT,on);
+        editor.apply();
+    }
+
+    public boolean getAlertOn(){
+        return settings.getBoolean(Constants.PARAM_ALERT,false);
+    }
+
+    public void setAlertDeviceID(String id){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_DEV_ID,id);
+        editor.apply();
+    }
+
+    public String getAlertDeviceID(){
+        return settings.getString(Constants.PARAM_DEV_ID,null);
+    }
+
+    public void setAlertDeviceModule(String module){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(Constants.PARAM_DATA,module);
+        editor.apply();
+    }
+
+    public String getAlertDeviceModule(){
+        return settings.getString(Constants.PARAM_DATA,null);
+    }
+
 }

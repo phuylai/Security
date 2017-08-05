@@ -24,6 +24,7 @@ import com.ecnu.security.Util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import io.fog.callbacks.ControlDeviceCallBack;
@@ -180,6 +181,7 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
             @Override
             public void onSuccess(String message) {
                 progressBar.setVisibility(View.VISIBLE);
+                removeDevice(deviceModel.getDevId());
                 ToastUtil.showToastShort(activity,R.string.changed);
                 getFragmentManager().popBackStack();
             }
@@ -190,6 +192,16 @@ public class DeviceEditFragment extends BaseFragment implements DetailItemHolder
                 ToastUtil.showToastShort(activity,message);
             }
         },myPreference.getToken());
+    }
+
+    private void removeDevice(final String deviceId){
+        Iterator<DeviceModel> iterator = activity.getDeviceModels().iterator();
+        while(iterator.hasNext()){
+            DeviceModel model = iterator.next();
+            if(model.getDevId().equals(deviceId)){
+                iterator.remove();
+            }
+        }
     }
 
     @Override

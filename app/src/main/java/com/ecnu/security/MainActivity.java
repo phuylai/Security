@@ -104,6 +104,9 @@ public class MainActivity extends BaseActivity {
                         }else{
                             intent.putExtra(Constants.VISIBLE,"false");
                         }
+                        myPreference.alertOn(true);
+                        myPreference.setAlertDeviceID(alert.getDevice_id());
+                        myPreference.setAlertDeviceModule(alert.getModule());
                         countTime();
                         sendBroadcast(intent);
                     }
@@ -644,6 +647,7 @@ public class MainActivity extends BaseActivity {
                 if(stopTimer) {
                     secondCount = Constants.MINUTE_SECOND;
                     stopTimer = false;
+                    handler.removeCallbacks(timer);
                     return;
                 }
                 Message message = new Message();

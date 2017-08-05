@@ -268,7 +268,7 @@ public class BindFragment extends BaseFragment implements View.OnClickListener,
         });
     }
 
-    private void updateDeviceList(String message){
+    protected void updateDeviceList(String message){
         recyclerView.removeAllViews();
         deviceModelList.clear();
         try {
