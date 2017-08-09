@@ -38,6 +38,7 @@ import com.ecnu.security.view.Adapter.ContactListAdapter;
 import com.ecnu.security.view.activities.JsonHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import io.fog.callbacks.MiCOCallBack;
@@ -74,8 +75,9 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
             switch (msg.what){
                 case Constants.PARAM_UPDATE:
                     models.clear();
-                    contacts = (List<TrustedContact>)msg.obj;
-                    models.addAll(contacts);
+                    //contacts = (List<TrustedContact>)msg.obj;
+                    //models.addAll(contacts);
+                    models.addAll((Collection<? extends TrustedContact>) msg.obj);
                     MLog.i("contact list","update view");
                     if(contactAdapter != null) {
                         contactAdapter.notifyDataSetChanged();
@@ -91,6 +93,7 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
     private void refreshList(){
         models.clear();
         models.addAll(contacts);
+        MLog.i("contacts",String.valueOf(contacts.size()));
         if(contactAdapter != null)
             contactAdapter.notifyDataSetChanged();
     }
@@ -182,14 +185,9 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
                 }
                 contacts.clear();
                 contacts.addAll(SplitString(note));
-                saveContact();
-                if(contacts != null) {
-                    Message msg = new Message();
-                    msg.what = Constants.PARAM_UPDATE;
-                    msg.obj = contacts;
-                    MLog.i("send msg",contacts.toString());
-                    handler.sendMessageDelayed(msg,DELAYMILLIS);
-                }
+                List<TrustedContact> save = new ArrayList<TrustedContact>(contacts);
+                saveContact(save);
+                refreshList();
             }
 
             @Override
@@ -199,7 +197,7 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
         }, myPreference.getToken());
     }
 
-    private synchronized void saveContact(){
+    private synchronized void saveContact(final List<TrustedContact> contacts){
         if(dbsave != null)
             return;
         dbsave = new AsyncTask<Object, Void, Void>() {
@@ -342,6 +340,7 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
                 temp+=contacts.get(i).getName() + "|" + contacts.get(i).getPhonenumber()+",";
             }
         }
+        CurrentSession.updateContact(activity,contacts.get(position),contact);
         allContacts = temp.substring(0,temp.length()-1);
         updateNote(position,contact);
     }
@@ -360,6 +359,7 @@ public class ContactListFragment extends BaseFragment implements ContactAdapter.
         }else {
             allContacts = temp.substring(0, temp.length() - 1);
         }
+        CurrentSession.removeContact(activity,contacts.get(position));
         updateNote(position);
     }
 

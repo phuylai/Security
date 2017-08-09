@@ -298,6 +298,11 @@ public class DialogUtil {
         String text = String.format(getString(R.string.noti_on_off),getString(R.string.on));
         if(!StringUtil.isNull(defValue)) {
             text = String.format(getString(R.string.noti_on_off), defValue);
+            if(defValue.equals("On")){
+                sw.setChecked(true);
+            }else{
+                sw.setChecked(false);
+            }
         }
         value.setText(text);
         title.setText(getString(R.string.noti));

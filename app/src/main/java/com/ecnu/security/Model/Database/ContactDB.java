@@ -13,11 +13,11 @@ import net.sqlcipher.database.SQLiteDatabase;
 public class ContactDB extends DBModel {
 
     private static ContactDB instance;
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     private static final String DBNAME = "contact.db";
     public static ContactDB getInstance(Context context){
         if(instance == null)
-            return new ContactDB(context);
+            instance =  new ContactDB(context);
         return instance;
     }
     public ContactDB(Context context){
@@ -44,9 +44,9 @@ public class ContactDB extends DBModel {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_CONTACT
                 + " ("
                 + KEY_ID + " integer primary key autoincrement, "
-                + KEY_CLIENTID + " varchar(40) unique, "
+                + KEY_CLIENTID + " varchar(40), "
                 + KEY_NAME + " varchar(25), "
-                + KEY_PHONE + " varchar(25))"
+                + KEY_PHONE + " varchar(25), constraint contact unique(" + KEY_NAME +","+ KEY_PHONE + "))"
         );
     }
 

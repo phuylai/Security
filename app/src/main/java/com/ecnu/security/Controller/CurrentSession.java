@@ -55,4 +55,12 @@ public class CurrentSession {
         }
         return null;
     }
+
+    public static boolean updateContact(Context context,TrustedContact old, TrustedContact newContact){
+        return ContactDBController.updateContact(context,newContact,old);
+    }
+
+    public static boolean removeContact(Context context,TrustedContact contact){
+        return ContactDBController.removeContact(context,contact);
+    }
 }

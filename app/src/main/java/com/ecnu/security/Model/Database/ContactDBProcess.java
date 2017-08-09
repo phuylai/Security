@@ -31,6 +31,38 @@ public class ContactDBProcess {
                     + DeviceDB.KEY_CLIENTID
                     + " =?";
 
+    public boolean updateContact(final String oldName, final String oldPhone,
+                                 final String newName, final String newPhone){
+        synchronized (contactDB){
+            TableOperator tableOperator = new TableOperator() {
+                @Override
+                public void doWork(SQLiteDatabase db) {
+                    contentValues.clear();
+                    contentValues.put(ContactDB.KEY_PHONE,newPhone);
+                    contentValues.put(ContactDB.KEY_NAME,newName);
+                    db.update(ContactDB.TABLE_CONTACT,contentValues,ContactDB.KEY_NAME +
+                            " =? AND " + ContactDB.KEY_PHONE + " =?",new String[]{oldName,oldPhone});
+                }
+            };
+            MLog.i("contact","update");
+            return contactDB.writeOperator(tableOperator);
+        }
+    }
+
+    public boolean removeContact(final String name,final String phone){
+        synchronized (contactDB){
+            TableOperator delete = new TableOperator() {
+                @Override
+                public void doWork(SQLiteDatabase db) {
+                    db.delete(ContactDB.TABLE_CONTACT,ContactDB.KEY_NAME +
+                            " =? AND " + ContactDB.KEY_PHONE + " =?",new String[]{name,phone});
+                }
+            };
+            MLog.i("contact","delete");
+            return contactDB.writeOperator(delete);
+        }
+    }
+
     public Collection<TrustedContact> loadContact(final String clientid){
         final List<TrustedContact> trustedContacts = new ArrayList<>();
         TableOperator tableOperator = new TableOperator() {
@@ -81,5 +113,6 @@ public class ContactDBProcess {
         MLog.i("contact db","save");
         return true;
     }
+
 
 }

@@ -28,4 +28,22 @@ public class ContactDBController {
         }
         return contactDBProcess.loadContact(clientid);
     }
+
+    public static boolean updateContact(Context context,TrustedContact newContact,
+                                        TrustedContact oldContact){
+        ContactDBProcess contactDBProcess = DBController.getContactDB(context);
+        if(contactDBProcess == null){
+            return false;
+        }
+        return contactDBProcess.updateContact(oldContact.getName(),
+                oldContact.getPhonenumber(),newContact.getName(),newContact.getPhonenumber());
+    }
+
+    public static boolean removeContact(Context context,TrustedContact contact){
+        ContactDBProcess contactDBProcess = DBController.getContactDB(context);
+        if(contactDBProcess == null){
+            return false;
+        }
+        return contactDBProcess.removeContact(contact.getName(),contact.getPhonenumber());
+    }
 }
